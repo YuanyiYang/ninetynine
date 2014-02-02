@@ -1,1 +1,14 @@
-Welcome to ninety-nine additional card game! It's a simple game and I am working on implmenting it!
+Welcome to ninety-nine additional card game! It's a simple game and I am working on implementing it!
+Here is a brief introduction about the rule.
+At the beginning, each player is given five cards. During the game, the value of each card played 
+is added to a running total which is not allowed to exceed 99. A player who cannot play without 
+causing this total to surpass 99 loses. After each player places a card as a discard pile, he/she 
+should draw a new card. Fail to do so will make you have fewer cards than others, which is an 
+obvious disadvantage. Also the player who has no card to play loses.
+Cards of certain ranks have special values or properties, which are:
+4: value is 0 and the order of play is reversed.
+7: exchange your cards with someone else and both of you cannot draw a new card.
+10: value is -10, or +10.
+J: draw a card from anyone else to become your card and he/she cannot draw a new card
+Q: value is -20, or +20.
+K: added up to 99
