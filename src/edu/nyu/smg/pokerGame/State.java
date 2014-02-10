@@ -79,17 +79,61 @@ public class State {
 	}
 	
 	/*
-	 * This method should be called after a player successfully player a card
+	 * This method should be called after a player successfully player a card. Or the card is 
+	 * drawn away by others.
 	 */
+	private void removeCardFromCurrentPlayer(Card card){
+		
+	}
 	
+	/*
+	 * After a valid card is played, it will be added to the UsedDeck to be shuffled in the future
+	 */
+	private void movePlayedCardToUsedDeck(Card card){
+		
+	}
 	
+	/*
+	 * This method should be called when a player is trying to draw a card from the pile
+	 */
+	private void removeCardFromUnusedDeck(){
+		
+	}
 	
+	/*
+	 * This method will add the specific card to the current player 
+	 */
+	private void addCardToCurrentPlayer(){
+		
+	}
 	
+	/*
+	 * After certain move, the player should draw a card from the unusedCard pile
+	 */
+	private void drawCardFromUnusedDeck(){
+		removeCardFromUnusedDeck();
+		addCardToCurrentPlayer();
+	}
 	
+	private void drawCardFromOthers(Player player){
+		
+	}
 	
+	private void addedPoints(int point){
+		this.points += point;
+	}
 	
+	private void addedUpToMax(){
+		this.points = 99;
+	}
 	
+	private void exchangeCardsWithOther(Player player){
+		
+	}
 	
+	private boolean checkIsGameOver(){
+		return isGameOver;
+	}
 	
 	
 	
