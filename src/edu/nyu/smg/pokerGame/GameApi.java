@@ -19,8 +19,8 @@ public final class GameApi {
     public UpdateUI(int yourPlayerId, List<Map<String, Object>> playersInfo,
         Map<String, Object> state) {
       this.yourPlayerId = yourPlayerId;
-      this.playersInfo = playersInfo;
-      this.state = state;
+      this.playersInfo = checkHasJsonSupportedType(playersInfo);
+      this.state = checkHasJsonSupportedType(state);
     }
 
     @Override
@@ -62,6 +62,10 @@ public final class GameApi {
       return getPlayerIds().indexOf(yourPlayerId);
     }
 
+    public int getPlayerIndex(int playerId) {
+      return getPlayerIds().indexOf(playerId);
+    }
+
     public Map<String, Object> getPlayerInfo(int playerId) {
       for (Map<String, Object> playerInfo : getPlayersInfo()) {
         if (playerId == (Integer) playerInfo.get(PLAYER_ID)) {
@@ -91,9 +95,9 @@ public final class GameApi {
         List<Operation> lastMove,
         int lastMovePlayerId) {
       super(yourPlayerId, playersInfo, state);
-      this.lastState = lastState;
+      this.lastState = checkHasJsonSupportedType(lastState);
       this.lastMove = lastMove;
-      this.lastMovePlayerId = lastMovePlayerId;
+      this.lastMovePlayerId = checkHasJsonSupportedType(lastMovePlayerId);
     }
 
     @Override
@@ -127,7 +131,7 @@ public final class GameApi {
     private final Map<String, Integer> playerIdToScore;
 
     public EndGame(Map<String, Integer> playerIdToScore) {
-      this.playerIdToScore = playerIdToScore;
+      this.playerIdToScore = checkHasJsonSupportedType(playerIdToScore);
     }
 
     @Override
@@ -165,8 +169,8 @@ public final class GameApi {
 
     private Set(String key, Object value, Object visibleToPlayerIds) {
       this.key = key;
-      this.value = value;
-      this.visibleToPlayerIds = visibleToPlayerIds;
+      this.value = checkHasJsonSupportedType(value);
+      this.visibleToPlayerIds = checkHasJsonSupportedType(visibleToPlayerIds);
     }
 
     @Override
@@ -245,7 +249,7 @@ public final class GameApi {
 
     private SetVisibility(String key, Object visibleToPlayerIds) {
       this.key = key;
-      this.visibleToPlayerIds = visibleToPlayerIds;
+      this.visibleToPlayerIds = checkHasJsonSupportedType(visibleToPlayerIds);
     }
 
     @Override
@@ -293,7 +297,7 @@ public final class GameApi {
     private final List<String> keys;
 
     public Shuffle(List<String> keys) {
-      this.keys = keys;
+      this.keys = checkHasJsonSupportedType(keys);
     }
 
     @Override
@@ -385,7 +389,7 @@ public final class GameApi {
     private final Map<String, Object> state;
 
     public ManipulateState(Map<String, Object> state) {
-      this.state = state;
+      this.state = checkHasJsonSupportedType(state);
     }
 
     @Override
@@ -560,6 +564,45 @@ public final class GameApi {
     }
   }
 
+  /**
+   * Checks the object has a JSON-supported data type, i.e.,
+   * the object is either a primitive (String, Integer, Double, Boolean, null)
+   * or the object is a List and every element in the list has a JSON-supported data type,
+   * or the object is a Map and the keys are String and the values have JSON-supported data types.
+   * @return the given object.
+   */
+  static <T> T checkHasJsonSupportedType(T object) {
+    if (object == null) {
+      return object;
+    }
+    if (object instanceof Integer || object instanceof Double
+        || object instanceof String || object instanceof Boolean) {
+      return object;
+    }
+    if (object instanceof List) {
+      List<?> list = (List<?>) object;
+      for (Object element : list) {
+        checkHasJsonSupportedType(element);
+      }
+      return object;
+    }
+    if (object instanceof Map) {
+      Map<?, ?> map = (Map<?, ?>) object;
+      for (Object key : map.keySet()) {
+        if (!(key instanceof String)) {
+          throw new IllegalArgumentException("Keys in a map must be String! key=" + key);
+        }
+      }
+      for (Object value : map.values()) {
+        checkHasJsonSupportedType(value);
+      }
+      return object;
+    }
+    throw new IllegalArgumentException(
+        "The object doesn't have a JSON-supported data type! object=" + object);
+  }
+
   private GameApi() { }
 
 }
+

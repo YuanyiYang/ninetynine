@@ -1,7 +1,6 @@
 package edu.nyu.smg.pokerGame;
 
-import com.google.gwt.thirdparty.guava.common.base.Objects;
-
+import com.google.common.base.*;
 public class Card {
 
 	private Rank cardRank;

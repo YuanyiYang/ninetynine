@@ -32,9 +32,26 @@ public enum Rank {
 			return VALUES[VALUES.length - 1];
 		return values()[ordinal() - 1];
 	}
-	
-	public int getNumberValue(){
-		return this.ordinal()+1;
+
+	public int getNumberValue() {
+		return this.ordinal() + 1;
 	}
-	
+
+	/*
+	 * Map ACE to 1, TWO to 2, THREE to 3.....TEN to 10, JACK to J, QUEEN to Q, KING to K
+	 */
+	public String getFirstLetter() {
+		int rank = this.ordinal() + 1;
+		return rank <= 10 ? String.valueOf(rank) : rank == 11 ? "J"
+				: rank == 12 ? "Q" : "K";
+	}
+
+	public static Rank fromFirstLetter(String rankString) {
+		int rankIndex = rankString.equals("J") ? 11
+				: rankString.equals("Q") ? 12 
+				: rankString.equals("K") ? 13
+			    : Integer.valueOf(rankString);
+		return VALUES[rankIndex - 1];
+	}
+
 }

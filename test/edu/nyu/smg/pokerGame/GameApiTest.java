@@ -2,8 +2,10 @@ package edu.nyu.smg.pokerGame;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +61,39 @@ public class GameApiTest {
         }
       }
     }
+  }
 
+  @Test
+  public void testLegalCheckHasJsonSupportedType() {
+    GameApi.checkHasJsonSupportedType(null);
+    GameApi.checkHasJsonSupportedType(34);
+    GameApi.checkHasJsonSupportedType(-342323);
+    GameApi.checkHasJsonSupportedType(5.23);
+    GameApi.checkHasJsonSupportedType("string");
+    GameApi.checkHasJsonSupportedType(true);
+    GameApi.checkHasJsonSupportedType(ImmutableList.of());
+    GameApi.checkHasJsonSupportedType(ImmutableList.of(true, 1));
+    GameApi.checkHasJsonSupportedType(ImmutableMap.of("key1", 1, "key2", false));
+    GameApi.checkHasJsonSupportedType(
+        ImmutableMap.of("key1", 1, "key2", ImmutableList.of(true, 1)));
+  }
+
+  @Test
+  public void testIllegalCheckHasJsonSupportedType() {
+    checkIllegalJsonSupportedType(45L);
+    checkIllegalJsonSupportedType(new Date());
+//    checkIllegalJsonSupportedType(Color.B);
+//    checkIllegalJsonSupportedType(ImmutableList.of(true, Color.B));
+    checkIllegalJsonSupportedType(ImmutableMap.of(true, 1));
+//   checkIllegalJsonSupportedType(ImmutableMap.of("key1", 1, "key2", Color.B));
+  }
+
+  private void checkIllegalJsonSupportedType(Object object) {
+    try {
+      GameApi.checkHasJsonSupportedType(object);
+      fail();
+    } catch (Exception expected) {
+      // expected exception
+    }
   }
 }
