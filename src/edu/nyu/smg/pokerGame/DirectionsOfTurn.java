@@ -20,4 +20,5 @@ public enum DirectionsOfTurn {
 	public DirectionsOfTurn getOppositeDirection() {
 		return this == Clockwise ? AntiClockwise : Clockwise;
 	}
+	
 }

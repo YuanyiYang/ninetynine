@@ -4,13 +4,11 @@ import com.google.common.base.*;
 public class Card {
 
 	private Rank cardRank;
-	private CardType cardType;
 	private Suit cardSuit;
 	private boolean isMinus;
 
 	protected Card() {
 		cardRank = null;
-		cardType = null;
 		cardSuit = null;
 		isMinus = false;
 	}
@@ -18,7 +16,6 @@ public class Card {
 	public Card(Rank cardRank, Suit cardSuit) {
 		this.cardRank = cardRank;
 		this.cardSuit = cardSuit;
-		this.cardType = null;
 		this.isMinus = false;
 	}
 
@@ -63,13 +60,6 @@ public class Card {
 		this.cardRank = cardRank;
 	}
 
-	public CardType getCardType() {
-		return cardType;
-	}
-
-	public void setCardType(CardType cardType) {
-		this.cardType = cardType;
-	}
 
 	public Suit getCardSuit() {
 		return cardSuit;

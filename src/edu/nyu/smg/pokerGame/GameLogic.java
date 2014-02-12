@@ -3,6 +3,7 @@ package edu.nyu.smg.pokerGame;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public class GameLogic {
 
 	/*
 	 * The entries used in the poker game are: turn:W/B, W, B, Used, Unused,
-	 * C0...C51, points, isSub:false, direction When we send operations on these
-	 * keys, it will always be in the above order.
+	 * C0...C51, points, isSub:false, direction:clockwise When we send
+	 * operations on these keys, it will always be in the above order.
 	 */
 
 	private final String TURN = "turn"; // turn of which player (either W or B)
@@ -29,8 +30,11 @@ public class GameLogic {
 	private static final String C = "C"; // Card key (C1 .. C52)
 	private static final String P = "Points"; // the total points of the game
 	private static final String IS_SUB = "isSub";
-	private static final String FALSE = "false";
+	private static final String IS_GAMEOVER = "isGameOver";
 	private static final String DIRECTION = "direction";
+	private static final String YES = "yes";
+	private static final String CLOCKWISE = "Clockwise";
+	private static final String ANTICLOCKWISE = "AntiClockwise";
 
 	public VerifyMoveDone verify(VerifyMove verifyMove) {
 		// TODO: I will implement this method in HW2
@@ -55,6 +59,101 @@ public class GameLogic {
 		ColorOfPlayer lastTurn = lastState.getTurn();
 		// there are many types of move
 
+		return null;
+	}
+
+	/*
+	 * In this method, the player will play a card. Different methods will be
+	 * called according to the type of this card. Here use cardId: C0,,,,C51
+	 * And convert the representation into a Integer list
+	 */
+
+	public List<Operation> playACard(String cardId, PokerState pokerState) {
+		if (cardId == null) {
+			return null;
+		}
+		String str = cardId.substring(0, 1).toUpperCase();
+		if (!"C".equals(str)) {
+			throw new IllegalArgumentException(
+					"The first letter is not C. It's not a card");
+		}
+		List<Integer> cardList = ImmutableList.<Integer>of(Integer.parseInt(cardId.substring(1)));
+		return playACard(cardList, pokerState);
+	}
+
+	private List<Operation> playACard(List<Integer> cardId, PokerState pokerState) {
+		// First convert the INT id(0...51) into a string like "1c", "ks"
+		int cardIdInInt = cardId.get(0);
+		String strCardId = cardIdToString(cardIdInInt);
+		// change the Id into rank
+		Rank cardRank = Rank.fromFirstLetter(strCardId.substring(0, 1)
+				.toUpperCase());
+		switch (cardRank) {
+		case FOUR: {
+			return playAReverseCard(pokerState, cardId);
+		}
+		case SEVEN: {
+			return playAExchangeCard(pokerState, cardId);
+		}
+		case TEN: {
+			return playAPlusOrMinusTenOperation(pokerState, cardId);
+		}
+		case JACK: {
+			return playADrawOtherCard(pokerState, cardId);
+		}
+		case QUEEN: {
+			return playAPlusOrMinusTwentyOperation(pokerState, cardId);
+		}
+		case KING: {
+			return playAddedToMaxCard(pokerState, cardId);
+		}
+		default:
+			return playANormalCard(pokerState, cardId);
+
+		}
+	}
+
+	/*
+	 * Here the logic seems like the function above which uses the current state
+	 * and last state to get the list of operation. I think the above function
+	 * should be used when to verify move. Thus I should implement several
+	 * method to perform the operations. Use the number to generate operations,
+	 * have nothing to do with the state
+	 */
+	public List<Operation> playANormalCard(PokerState pokerState,
+			List<Integer> cardList) {
+		return null;
+	}
+
+	public List<Operation> playAReverseCard(PokerState pokerState,
+			List<Integer> cardList) {
+		// check the current player and the current direction
+		return null;
+	}
+
+	public List<Operation> playAExchangeCard(PokerState pokerState,
+			List<Integer> cardList) {
+		return null;
+	}
+
+	public List<Operation> playAPlusOrMinusTenOperation(PokerState pokerState,
+			List<Integer> cardList) {
+		return null;
+	}
+
+	public List<Operation> playAPlusOrMinusTwentyOperation(
+			PokerState pokerState, List<Integer> cardList) {
+		return null;
+	}
+
+	public List<Operation> playADrawOtherCard(PokerState pokerState,
+			List<Integer> cardList) {
+		// apparently the card drawn from other now is given randomly
+		return null;
+	}
+
+	public List<Operation> playAddedToMaxCard(PokerState pokerState,
+			List<Integer> cardList) {
 		return null;
 	}
 
@@ -85,11 +184,15 @@ public class GameLogic {
 					.of(blackPlayerId)));
 		}
 		for (int i = 10; i < 52; i++) {
-			operations.add(new SetVisibility(C + i, null));
+			operations.add(new SetVisibility(C + i, null)); // to question
 		}
 		operations.add(new Set(P, 0));
-		operations.add(new Set(IS_SUB, FALSE));
-//		operations.add(new Set(DIRECTION, ))
+		// operations.add(new Set(IS_SUB, FALSE)); // we don't need to do this
+		// action now
+		// If the gameApiState don't contain this key, it's false
+		// operations.add(new Set(HAS_WINNER, FALSE));
+		operations.add(new Set(DIRECTION, CLOCKWISE)); // the default is the
+														// clockwise
 		return operations;
 	}
 
@@ -124,7 +227,8 @@ public class GameLogic {
 				ImmutableList.copyOf(unused),
 				gameApiState.containsKey(IS_SUB),
 				(Integer) gameApiState.get(P),
-				(DirectionsOfTurn.valueOf((String) gameApiState.get(DIRECTION))));
+				(DirectionsOfTurn.valueOf((String) gameApiState.get(DIRECTION))),
+				gameApiState.containsKey(IS_GAMEOVER));
 	}
 
 	List<String> getCardsInRange(int fromInclusive, int toInclusive) {
@@ -166,5 +270,21 @@ public class GameLogic {
 		int suit = cardID % 4;
 		String suitString = Suit.values()[suit].getFirstLetterLowerCase();
 		return rankString + suitString;
+	}
+
+	<T> List<T> subtract(List<T> removeFrom, List<T> elementsToRemove) {
+		check(removeFrom.containsAll(elementsToRemove), removeFrom,
+				elementsToRemove);
+		List<T> result = Lists.newArrayList(removeFrom);
+		result.removeAll(elementsToRemove);
+		check(removeFrom.size() == result.size() + elementsToRemove.size());
+		return result;
+	}
+
+	private void check(boolean val, Object... debugArguments) {
+		if (!val) {
+			throw new RuntimeException("We have a hacker! debugArguments="
+					+ Arrays.toString(debugArguments));
+		}
 	}
 }

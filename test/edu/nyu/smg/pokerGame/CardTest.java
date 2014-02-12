@@ -29,6 +29,7 @@ public class CardTest {
 		assertFalse(card3.equals(null));
 	}
 
+	
 	/*
 	 * This test method is to demonstrate that in the immutableList, the data field of the inner 
 	 * object still could be changed.

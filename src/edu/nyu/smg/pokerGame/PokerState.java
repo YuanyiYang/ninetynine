@@ -7,9 +7,10 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Representation of the cheat game state. The game state uses these keys: turn,
- * W, B, Used, UnUsed, C0...C51, Point, direction ,isSub which are mapped to these fields: turn,
- * white, black, usedPile, unUsedPile, cards, points direction of the game 
- * and whether this card will add up to the points or minus from the points
+ * W, B, Used, UnUsed, C0...C51, Point, direction ,isSub and isGameOver which
+ * are mapped to these fields: turn, white, black, usedPile, unUsedPile, cards,
+ * points, direction of the game, whether this card will add up to the points or
+ * minus from the points and do we have a winner right now
  */
 
 public class PokerState {
@@ -30,12 +31,13 @@ public class PokerState {
 	private final boolean isSub;
 	private final Integer points;
 	private final DirectionsOfTurn direction;
-//	private final Optional<Claim> claim;
+	private final boolean isGameOver;
 
 	public PokerState(ColorOfPlayer turn, ImmutableList<Optional<Card>> cards,
 			ImmutableList<Integer> white, ImmutableList<Integer> black,
 			ImmutableList<Integer> used, ImmutableList<Integer> unused,
-			boolean isSub, Integer points, DirectionsOfTurn direction) {
+			boolean isSub, Integer points, DirectionsOfTurn direction,
+			boolean isGameOver) {
 		this.turn = checkNotNull(turn);
 		this.cards = checkNotNull(cards);
 		this.white = checkNotNull(white);
@@ -45,6 +47,11 @@ public class PokerState {
 		this.isSub = isSub;
 		this.points = points;
 		this.direction = direction;
+		this.isGameOver = isGameOver;
+	}
+
+	public boolean isGameOver() {
+		return isGameOver;
 	}
 
 	public DirectionsOfTurn getDirection() {
