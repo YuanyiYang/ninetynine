@@ -18,8 +18,8 @@ public class GameLogic {
 
 	/*
 	 * The entries used in the poker game are: turn:W/B, W, B, Used, Unused,
-	 * C0...C51, points, isSub:false, direction:clockwise When we send
-	 * operations on these keys, it will always be in the above order.
+	 * C0...C51, points, direction:clockwise, isSub:false, isGameOver:false When
+	 * we send operations on these keys, it will always be in the above order.
 	 */
 
 	private final String TURN = "turn"; // turn of which player (either W or B)
@@ -64,8 +64,8 @@ public class GameLogic {
 
 	/*
 	 * In this method, the player will play a card. Different methods will be
-	 * called according to the type of this card. Here use cardId: C0,,,,C51
-	 * And convert the representation into a Integer list
+	 * called according to the type of this card. Here use cardId: C0,,,,C51 And
+	 * convert the representation into a Integer list
 	 */
 
 	public List<Operation> playACard(String cardId, PokerState pokerState) {
@@ -77,11 +77,13 @@ public class GameLogic {
 			throw new IllegalArgumentException(
 					"The first letter is not C. It's not a card");
 		}
-		List<Integer> cardList = ImmutableList.<Integer>of(Integer.parseInt(cardId.substring(1)));
+		List<Integer> cardList = ImmutableList.<Integer> of(Integer
+				.parseInt(cardId.substring(1)));
 		return playACard(cardList, pokerState);
 	}
 
-	private List<Operation> playACard(List<Integer> cardId, PokerState pokerState) {
+	private List<Operation> playACard(List<Integer> cardId,
+			PokerState pokerState) {
 		// First convert the INT id(0...51) into a string like "1c", "ks"
 		int cardIdInInt = cardId.get(0);
 		String strCardId = cardIdToString(cardIdInInt);
@@ -119,6 +121,16 @@ public class GameLogic {
 	 * should be used when to verify move. Thus I should implement several
 	 * method to perform the operations. Use the number to generate operations,
 	 * have nothing to do with the state
+	 */
+	
+	/**
+	 * The current player played a normal value card. This will add up to the total value.
+	 * And it has to figure out whether the game will be over or not. If over, set the state 
+	 * and add the EndGame operation.
+	 * @param pokerState the last state in GameApi, which stored in the server and recognized
+	 * 			by both player as the valid state
+	 * @param cardList the card played by the player. The Integer 
+	 * @return
 	 */
 	public List<Operation> playANormalCard(PokerState pokerState,
 			List<Integer> cardList) {

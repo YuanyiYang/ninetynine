@@ -122,39 +122,6 @@ public class GameLogicTest {
 			.put(UNUSED, getIndicesInRange(12, 51)).put(P, "RankInC4C5")
 			.put(DIRECTION, CLOCKWISE).build();
 
-	@Test
-	public void testCardsInRange() {
-		assertEquals(ImmutableList.of("C3", "C4"),
-				gameLogic.getCardsInRange(3, 4));
-	}
-
-	@Test
-	public void testGetCard() {
-		assertEquals(ImmutableList.of("C50"), gameLogic.getCard(50));
-	}
-
-	@Test
-	public void testGetCardIndex() {
-		assertEquals(ImmutableList.of(50), gameLogic.getCardIndex(50));
-	}
-
-	private <T> List<T> concat(List<T> a, List<T> b) {
-		return gameLogic.concat(a, b);
-	}
-
-	@Test
-	public void testCardIdToString() {
-		assertEquals("1c", gameLogic.cardIdToString(0));
-		assertEquals("1d", gameLogic.cardIdToString(1));
-		assertEquals("1h", gameLogic.cardIdToString(2));
-		assertEquals("1s", gameLogic.cardIdToString(3));
-		assertEquals("2c", gameLogic.cardIdToString(4));
-		assertEquals("2d", gameLogic.cardIdToString(5));
-		assertEquals("2h", gameLogic.cardIdToString(6));
-		assertEquals("2s", gameLogic.cardIdToString(7));
-		assertEquals("Ks", gameLogic.cardIdToString(51));
-	}
-
 	private List<Operation> getInitialOperations() {
 		return gameLogic.getInitialMove(wId, bId);
 	}
@@ -311,6 +278,13 @@ public class GameLogicTest {
 			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 99)
 			.put(DIRECTION, ANTICLOCKWISE).build();
 
+	private final Map<String, Object> gameContinueWithCardTen = ImmutableMap
+			.<String, Object>builder().put(TURN, B).put(W, getCardIndex(27))
+			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 25))
+			.put(UNUSED, getIndicesInRange(28, 51)).put(P, 89)
+			.put(DIRECTION, ANTICLOCKWISE)
+			.put(IS_SUB, YES).build();
+	
 	private final Map<String, Object> BWinsTheGame = ImmutableMap
 			.<String, Object> builder().put(TURN, B)
 			.put(W, ImmutableList.<Integer> of()).put(B, getCardIndex(26))
@@ -356,6 +330,24 @@ public class GameLogicTest {
 				operations));
 	}
 	
+	/*
+	 * To test the card represent a minus value(Rank10 and Q) here we simply assume this card is 
+	 * ten. The total value will minus 10
+	 */
+	@Test
+	public void testMinusSucceed(){
+		List<Operation> operations = ImmutableList.<Operation> builder()
+				.add(new Set(TURN, B)).add(new Set(W, getCardIndex(27)))
+				.add(new Set(B, getCardIndex(26)))
+				.add(new Set(USED, getIndicesInRange(0, 25)))
+				.add(new Set(UNUSED, getIndicesInRange(28, 51)))
+				.add(new Set(P, 89)).add(new Set(DIRECTION, ANTICLOCKWISE))
+				.add(new Set(IS_SUB,YES)).build();
+		assertMoveOk(move(bId, wId, gameContinueWithCardTen, simpleStateBeforeEndGame, operations));
+	}
+	
+	//Need to test the add up to 99 function
+	
 	private void assertHacker(VerifyMove verifyMove) {
 		VerifyMoveDone verifyDone = gameLogic.verify(verifyMove);
 		assertEquals(verifyMove.getLastMovePlayerId(),
@@ -379,6 +371,39 @@ public class GameLogicTest {
 
 	private List<Integer> getCardIndex(int cardNumber) {
 		return gameLogic.getCardIndex(cardNumber);
+	}
+	
+	@Test
+	public void testCardsInRange() {
+		assertEquals(ImmutableList.of("C3", "C4"),
+				gameLogic.getCardsInRange(3, 4));
+	}
+
+	@Test
+	public void testGetCard() {
+		assertEquals(ImmutableList.of("C50"), gameLogic.getCard(50));
+	}
+
+	@Test
+	public void testGetCardIndex() {
+		assertEquals(ImmutableList.of(50), gameLogic.getCardIndex(50));
+	}
+
+	private <T> List<T> concat(List<T> a, List<T> b) {
+		return gameLogic.concat(a, b);
+	}
+
+	@Test
+	public void testCardIdToString() {
+		assertEquals("1c", gameLogic.cardIdToString(0));
+		assertEquals("1d", gameLogic.cardIdToString(1));
+		assertEquals("1h", gameLogic.cardIdToString(2));
+		assertEquals("1s", gameLogic.cardIdToString(3));
+		assertEquals("2c", gameLogic.cardIdToString(4));
+		assertEquals("2d", gameLogic.cardIdToString(5));
+		assertEquals("2h", gameLogic.cardIdToString(6));
+		assertEquals("2s", gameLogic.cardIdToString(7));
+		assertEquals("Ks", gameLogic.cardIdToString(51));
 	}
 
 }
