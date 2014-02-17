@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 
 public class PokerState {
 	private final ColorOfPlayer turn;
+	private final ImmutableList<Integer> playerIds;
 	/**
 	 * Note that some of the entries will have null, meaning the card is not
 	 * visible to us.
@@ -34,11 +35,12 @@ public class PokerState {
 	private final boolean isGameOver;
 
 	public PokerState(ColorOfPlayer turn, ImmutableList<Optional<Card>> cards,
-			ImmutableList<Integer> white, ImmutableList<Integer> black,
-			ImmutableList<Integer> used, ImmutableList<Integer> unused,
-			boolean isSub, Integer points, DirectionsOfTurn direction,
-			boolean isGameOver) {
+			ImmutableList<Integer> playerIds, ImmutableList<Integer> white,
+			ImmutableList<Integer> black, ImmutableList<Integer> used,
+			ImmutableList<Integer> unused, boolean isSub, Integer points,
+			DirectionsOfTurn direction, boolean isGameOver) {
 		this.turn = checkNotNull(turn);
+		this.playerIds = checkNotNull(playerIds);
 		this.cards = checkNotNull(cards);
 		this.white = checkNotNull(white);
 		this.black = checkNotNull(black);
@@ -88,5 +90,17 @@ public class PokerState {
 
 	public Integer getPoints() {
 		return points;
+	}
+
+	public ImmutableList<Integer> getPlayerIds() {
+		return playerIds;
+	}
+
+	public int getPlayerId(ColorOfPlayer color) {
+		return playerIds.get(color.ordinal());
+	}
+
+	public ImmutableList<Integer> getWhiteOrBlack(ColorOfPlayer color) {
+		return color.isWhite() ? white : black;
 	}
 }
