@@ -73,122 +73,6 @@ public class GameLogicTest {
 			.put(UNUSED, getIndicesInRange(10, 51)).put(P, 0).put(C + 4, "5s")
 			.put(DIRECTION, CLOCKWISE).build();
 
-	private final Map<String, Object> WPlayDrawOtherCard = ImmutableMap
-			.<String, Object> builder().put(TURN, B)
-			.put(W, getIndicesInRange(7, 10)).put(B, getIndicesInRange(0, 3))
-			.put(USED, getIndicesInRange(4, 6))
-			.put(UNUSED, getIndicesInRange(11, 51)).put(P, "RankInC4")
-			.put(DIRECTION, CLOCKWISE).build();
-
-	private final Map<String, Object> BPlayChangeDirection = ImmutableMap
-			.<String, Object> builder().put(TURN, W)
-			.put(W, getIndicesInRange(7, 10))
-			.put(B, concat(getCardIndex(11), getIndicesInRange(0, 2)))
-			.put(USED, getIndicesInRange(3, 6))
-			.put(UNUSED, getIndicesInRange(12, 51)).put(P, "RankInC4")
-			.put(DIRECTION, ANTICLOCKWISE).build();
-
-	/*
-	 * To test this illegal state, we use initial state as the last state for
-	 * simplicity
-	 */
-	private final Map<String, Object> illegalWPlayDrawMoreThanOne = ImmutableMap
-			.<String, Object> builder().put(TURN, B)
-			.put(W, concat(getIndicesInRange(0, 3), getIndicesInRange(10, 11)))
-			.put(B, getIndicesInRange(5, 9)).put(USED, getCardIndex(4))
-			.put(UNUSED, getIndicesInRange(12, 51)).put(P, "RankInC4")
-			.put(DIRECTION, CLOCKWISE).build();
-
-	private final Map<String, Object> illegalBDrawFromOtherAndPile = ImmutableMap
-			.<String, Object> builder().put(TURN, W)
-			.put(W, getIndicesInRange(0, 3))
-			.put(B, concat(getIndicesInRange(4, 8), getCardIndex(10)))
-			.put(USED, getCardIndex(9)).put(UNUSED, getIndicesInRange(11, 51))
-			.put(P, 0).put(DIRECTION, CLOCKWISE).build();
-
-	private final Map<String, Object> illegalWPlayTwice = ImmutableMap
-			.<String, Object> builder().put(TURN, B)
-			.put(W, concat(getIndicesInRange(0, 2), getIndicesInRange(10, 11)))
-			.put(B, getIndicesInRange(5, 9)).put(USED, getIndicesInRange(3, 4))
-			.put(UNUSED, getIndicesInRange(12, 51)).put(P, "RankInC4C5")
-			.put(DIRECTION, CLOCKWISE).build();
-
-	private final Map<String, Object> simpleStateBeforeEndGame = ImmutableMap
-			.<String, Object> builder().put(TURN, W).put(W, getCardIndex(25))
-			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 24))
-			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 99)
-			.put(DIRECTION, ANTICLOCKWISE).build();
-
-	private final Map<String, Object> gameContinueWithCardTen = ImmutableMap
-			.<String, Object> builder().put(TURN, B).put(W, getCardIndex(27))
-			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 25))
-			.put(UNUSED, getIndicesInRange(28, 51)).put(P, 89)
-			.put(DIRECTION, ANTICLOCKWISE).put(IS_SUB, YES).build();
-
-	private final Map<String, Object> BWinsTheGame = ImmutableMap
-			.<String, Object> builder().put(TURN, B)
-			.put(W, ImmutableList.<Integer> of()).put(B, getCardIndex(26))
-			.put(USED, getIndicesInRange(0, 25))
-			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 100)
-			.put(DIRECTION, ANTICLOCKWISE).put(IS_GAMEOVER, YES).build();
-
-	private final Map<String, Object> WWinsTheGame = ImmutableMap
-			.<String, Object> builder().put(TURN, B).put(W, getCardIndex(26))
-			.put(B, ImmutableList.of()).put(USED, getIndicesInRange(0, 25))
-			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 99)
-			.put(DIRECTION, ANTICLOCKWISE).put(IS_GAMEOVER, YES).build();
-
-	/*
-	 * It's W's move. There are three kinds of result after this 1.Value card. W
-	 * lose! 2.Jack W wins. 3.Other wild card continue
-	 */
-
-	// @Test
-	// public void testGameEndWithBWins() {
-	// List<Operation> operations = ImmutableList.<Operation> builder()
-	// .add(new Set(TURN, B))
-	// .add(new Set(W, ImmutableList.<Integer> of()))
-	// .add(new Set(B, getCardIndex(26)))
-	// .add(new Set(USED, getIndicesInRange(0, 25)))
-	// .add(new Set(UNUSED, getIndicesInRange(27, 51)))
-	// .add(new Set(P, 100)).add(new Set(DIRECTION, ANTICLOCKWISE))
-	// .add(new EndGame(bId)).build();
-	// assertMoveOk(move(bId, wId, BWinsTheGame, simpleStateBeforeEndGame,
-	// operations));
-	// }
-	//
-	// @Test
-	// public void testGameEndWithWWins() {
-	// List<Operation> operations = ImmutableList.<Operation> builder()
-	// .add(new Set(TURN, B)).add(new Set(W, getCardIndex(26)))
-	// .add(new Set(B, ImmutableList.<Integer> of()))
-	// .add(new Set(USED, getIndicesInRange(0, 25)))
-	// .add(new Set(UNUSED, getIndicesInRange(27, 51)))
-	// .add(new Set(P, 99)).add(new Set(DIRECTION, ANTICLOCKWISE))
-	// .add(new EndGame(wId)).build();
-	// assertMoveOk(move(bId, wId, WWinsTheGame, simpleStateBeforeEndGame,
-	// operations));
-	// }
-	//
-	// /*
-	// * To test the card represent a minus value(Rank10 and Q) here we simply
-	// * assume this card is ten. The total value will minus 10
-	// */
-	// @Test
-	// public void testMinusSucceed() {
-	// List<Operation> operations = ImmutableList.<Operation> builder()
-	// .add(new Set(TURN, B)).add(new Set(W, getCardIndex(27)))
-	// .add(new Set(B, getCardIndex(26)))
-	// .add(new Set(USED, getIndicesInRange(0, 25)))
-	// .add(new Set(UNUSED, getIndicesInRange(28, 51)))
-	// .add(new Set(P, 89)).add(new Set(DIRECTION, ANTICLOCKWISE))
-	// .add(new Set(IS_SUB, YES)).build();
-	// assertMoveOk(move(bId, wId, gameContinueWithCardTen,
-	// simpleStateBeforeEndGame, operations));
-	// }
-
-	// Need to test the add up to 99 function
-
 	private List<Integer> getIndicesInRange(int fromInclusive, int toInclusive) {
 		return gameLogic.getIndicesInRange(fromInclusive, toInclusive);
 	}
@@ -228,10 +112,6 @@ public class GameLogicTest {
 		assertEquals("2h", gameLogic.cardIdToString(6));
 		assertEquals("2s", gameLogic.cardIdToString(7));
 		assertEquals("Ks", gameLogic.cardIdToString(51));
-	}
-
-	private <T> List<T> subtract(List<T> removeFrom, List<T> elementsToRemove) {
-		return gameLogic.subtract(removeFrom, elementsToRemove);
 	}
 
 	private List<String> getCardsInRange(int fromInclusive, int toInclusive) {
@@ -311,8 +191,8 @@ public class GameLogicTest {
 
 	@Test
 	public void testLegalGetNextMoveSub() {
-		List<Operation> lastMove = ImmutableList.<Operation> of(new Set(IS_SUB,
-				YES));
+		List<Operation> lastMove = ImmutableList.<Operation> of(
+				new SetTurn(bId), new Set(IS_SUB, YES));
 		assertMoveOk(move(bId, WPlayDrawOtherCard, lastMove, emptyState));
 	}
 
@@ -337,8 +217,7 @@ public class GameLogicTest {
 		operations.add(new Set(UNUSED, getIndicesInRange(0, 41)));
 		operations.add(new Shuffle(getCardsInRange(0, 41)));
 		for (Integer newCardIndex : getIndicesInRange(0, 41)) {
-			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of()));
+			operations.add(new SetVisibility(C + newCardIndex, visibleToNone));
 		}
 		assertMoveOk(move(wId, needANewRoundShuffleState, operations,
 				afterANewRoundShuffleState));
@@ -355,6 +234,28 @@ public class GameLogicTest {
 			.put(UNUSED, getIndicesInRange(11, 51)).put(P, 5).put(C + 4, "5h")
 			.put(DIRECTION, CLOCKWISE).build();
 
+	private final Map<String, Object> WPlayAMaxCard = ImmutableMap
+			.<String, Object> builder()
+			.put(W, concat(getIndicesInRange(0, 3), getCardIndex(10)))
+			.put(B, getIndicesInRange(5, 9)).put(USED, getCardIndex(4))
+			.put(UNUSED, getIndicesInRange(11, 51)).put(P, 99).put(C + 4, "kh")
+			.put(DIRECTION, CLOCKWISE).build();
+
+	@Test
+	public void testWPlayAMaxValueCard() {
+		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(bId));
+		operations.add(new Set(W, concat(getIndicesInRange(0, 3),
+				getCardIndex(10))));
+		operations.add(new Set(B, getIndicesInRange(5, 9)));
+		operations.add(new Set(USED, getCardIndex(4)));
+		operations.add(new Set(UNUSED, getIndicesInRange(11, 51)));
+		operations.add(new Set(P, 99));
+		operations.add(new SetVisibility(C + 4));
+		operations.add(new SetVisibility(C + 10, visibleToW));
+		assertMoveOk(move(wId, initialMoveState, operations, WPlayAMaxCard));
+	}
+
 	@Test
 	public void testANormalValueCard() {
 		List<Operation> operations = Lists.newArrayList();
@@ -366,8 +267,7 @@ public class GameLogicTest {
 		operations.add(new Set(UNUSED, getIndicesInRange(11, 51)));
 		operations.add(new Set(P, 5));
 		operations.add(new SetVisibility(C + 4));
-		operations.add(new SetVisibility(C + 10, ImmutableList
-				.<Integer> of(wId)));
+		operations.add(new SetVisibility(C + 10, visibleToW));
 		/*
 		 * In this move, it stands for that the player plays his own card. The
 		 * player could see the actual value of the card, so the actual value of
@@ -393,7 +293,7 @@ public class GameLogicTest {
 			.put(DIRECTION, CLOCKWISE).build();
 
 	@Test
-	public void testAExchageCard() {
+	public void testBPlayedAExchageCard() {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn(wId));
 		operations.add(new Set(B, concat(getIndicesInRange(0, 3),
@@ -402,26 +302,24 @@ public class GameLogicTest {
 		operations.add(new Set(USED, getIndicesInRange(4, 5)));
 		for (Integer newCardIndex : concat(getIndicesInRange(0, 3),
 				getCardIndex(10))) {
-			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of(bId)));
+			operations.add(new SetVisibility(C + newCardIndex, visibleToB));
 		}
 		for (Integer newCardIndex : getIndicesInRange(6, 9)) {
-			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of(wId)));
+			operations.add(new SetVisibility(C + newCardIndex, visibleToW));
 		}
 		operations.add(new SetVisibility(C + 5));
 		assertMoveOk(move(bId, WPlayANormalCard, operations, BPlayAExchangeCard));
 	}
-	
+
 	private final Map<String, Object> BPlayAExchangeCardWithWrongCard = ImmutableMap
 			.<String, Object> builder().put(W, getIndicesInRange(6, 9))
 			.put(B, concat(getIndicesInRange(0, 3), getCardIndex(10)))
 			.put(USED, getIndicesInRange(4, 5))
 			.put(UNUSED, getIndicesInRange(11, 51)).put(P, 5).put(C + 5, "4s")
 			.put(DIRECTION, CLOCKWISE).build();
-	
+
 	@Test
-	public void testIllegalExchangeWithWrongCard(){
+	public void testIllegalExchangeWithWrongCard() {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn(wId));
 		operations.add(new Set(B, concat(getIndicesInRange(0, 3),
@@ -430,17 +328,220 @@ public class GameLogicTest {
 		operations.add(new Set(USED, getIndicesInRange(4, 5)));
 		for (Integer newCardIndex : concat(getIndicesInRange(0, 3),
 				getCardIndex(10))) {
-			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of(bId)));
+			operations.add(new SetVisibility(C + newCardIndex, visibleToB));
 		}
 		for (Integer newCardIndex : getIndicesInRange(6, 9)) {
-			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of(wId)));
+			operations.add(new SetVisibility(C + newCardIndex, visibleToW));
 		}
 		operations.add(new SetVisibility(C + 5));
-		assertHacker(move(bId, WPlayANormalCard, operations, BPlayAExchangeCardWithWrongCard));
+		assertHacker(move(bId, WPlayANormalCard, operations,
+				BPlayAExchangeCardWithWrongCard));
 	}
+
 	/*
-	 * Gam play: W->C4, Point:5; B->exchange;
+	 * Gam play: W->C4, Point:5; B->exchange; W->Draw others; B->Change
+	 * direction
 	 */
+
+	// W: 6-9; B: 0-3,10 Used:4,5 UnUsed:11-51
+	// W: 0,6-8; B:1-3,10; Used: 4,5,9 UnUsed:11-51
+
+	private final Map<String, Object> WPlayDrawOtherCard = ImmutableMap
+			.<String, Object> builder()
+			.put(W,
+					concat(ImmutableList.<Integer> of(0),
+							getIndicesInRange(6, 8)))
+			.put(B,
+					concat(getIndicesInRange(1, 3),
+							ImmutableList.<Integer> of(10)))
+			.put(USED, concat(getIndicesInRange(4, 5), getCardIndex(9)))
+			.put(UNUSED, getIndicesInRange(11, 51)).put(P, 5).put(C + 9, "Js")
+			.put(DIRECTION, CLOCKWISE).build();
+
+	@Test
+	public void testWPlayADrawOtherCard() {
+		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(bId));
+		operations.add(new Set(W, concat(getIndicesInRange(6, 8),
+				ImmutableList.<Integer> of(0))));
+		operations.add(new Set(B, concat(getIndicesInRange(1, 3),
+				ImmutableList.<Integer> of(10))));
+		operations.add(new Set(USED, concat(getIndicesInRange(4, 5),
+				getCardIndex(9))));
+		operations.add(new SetVisibility(C + 9));
+		operations.add(new SetVisibility(C + 0, visibleToW));
+		operations.add(new Shuffle(ImmutableList.<String> of("C6", "C7", "C8",
+				"C0")));
+		// this sequence should be exactly as in the game logic
+		assertMoveOk(move(wId, BPlayAExchangeCard, operations,
+				WPlayDrawOtherCard));
+	}
+
+	// W: 0,6-8; B:1-3,11; Used: 4,5,9,10 UnUsed:12-51
+	private final Map<String, Object> BPlayChangeDirection = ImmutableMap
+			.<String, Object> builder()
+			.put(W, concat(getCardIndex(0), getIndicesInRange(6, 8)))
+			.put(B, concat(getCardIndex(11), getIndicesInRange(1, 3)))
+			.put(USED,
+					concat(getIndicesInRange(9, 10), getIndicesInRange(4, 5)))
+			.put(UNUSED, getIndicesInRange(12, 51)).put(P, 5).put(C + 10, "4c")
+			.put(DIRECTION, ANTICLOCKWISE).build();
+
+	@Test
+	public void testBPlayAChangeDirectionCard() {
+		List<Operation> desiredOperations = ImmutableList
+				.<Operation> builder()
+				.add(new SetTurn(wId))
+				.add(new Set(B, concat(getIndicesInRange(1, 3),
+						getCardIndex(11))))
+				.add(new Set(W, concat(ImmutableList.<Integer> of(0),
+						getIndicesInRange(6, 8))))
+				.add(new Set(USED, concat(getIndicesInRange(4, 5),
+						getIndicesInRange(9, 10))))
+				.add(new Set(UNUSED, getIndicesInRange(12, 51)))
+				.add(new SetVisibility(C + 10))
+				.add(new SetVisibility(C + 11, visibleToB))
+				.add(new Set(DIRECTION, ANTICLOCKWISE)).build();
+		assertMoveOk(move(bId, WPlayDrawOtherCard, desiredOperations,
+				BPlayChangeDirection));
+	}
+
+	@Test
+	public void testIllegalChangeDirectionMoveWithDirectionUnchanged() {
+		List<Operation> desiredOperations = ImmutableList
+				.<Operation> builder()
+				.add(new SetTurn(wId))
+				.add(new Set(B, concat(getIndicesInRange(1, 3),
+						getCardIndex(11))))
+				.add(new Set(W, concat(ImmutableList.<Integer> of(0),
+						getIndicesInRange(6, 8))))
+				.add(new Set(USED, concat(getIndicesInRange(4, 5),
+						getIndicesInRange(9, 10))))
+				.add(new Set(UNUSED, getIndicesInRange(12, 51)))
+				.add(new SetVisibility(C + 10))
+				.add(new SetVisibility(C + 11, visibleToB))
+				.add(new Set(DIRECTION, CLOCKWISE)).build();
+		assertHacker(move(bId, WPlayDrawOtherCard, desiredOperations,
+				BPlayChangeDirection));
+	}
+
+	private final Map<String, Object> simpleStateBeforeEndGameWTurn = ImmutableMap
+			.<String, Object> builder().put(W, getCardIndex(25))
+			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 24))
+			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 99)
+			.put(C + 25, "Jd").put(DIRECTION, ANTICLOCKWISE).build();
+
+	private final Map<String, Object> gameContinueWithSub = ImmutableMap
+			.<String, Object> builder().put(W, getCardIndex(25))
+			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 24))
+			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 99)
+			.put(C + 25, "Qd").put(DIRECTION, ANTICLOCKWISE).put(IS_SUB, YES)
+			.build();
+
+	private final Map<String, Object> WWinsTheGame = ImmutableMap
+			.<String, Object> builder().put(W, getCardIndex(26))
+			.put(B, ImmutableList.<Integer> of())
+			.put(USED, getIndicesInRange(0, 25))
+			.put(UNUSED, getIndicesInRange(27, 51)).put(P, 99)
+			.put(C + 25, "Jd").put(DIRECTION, ANTICLOCKWISE)
+			.put(IS_GAMEOVER, YES).build();
+
+	private final Map<String, Object> BWinsTheGame = ImmutableMap
+			.<String, Object> builder().put(W, getCardIndex(27))
+			.put(B, ImmutableList.of(26)).put(USED, getIndicesInRange(0, 25))
+			.put(UNUSED, getIndicesInRange(28, 51)).put(P, 99)
+			.put(C + 25, "3c").put(DIRECTION, ANTICLOCKWISE)
+			.put(IS_GAMEOVER, YES).build();
+
+	/*
+	 * It's W's move. There are three kinds of result after this 1.Value card. W
+	 * lose! 2.Jack W wins. 3.Other wild card continue
+	 */
+
+	@Test
+	public void testGameEndWithWWins() {
+		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(bId));
+		operations.add(new Set(W, getCardIndex(26)));
+		operations.add(new Set(B, ImmutableList.<Integer> of()));
+		operations.add(new Set(USED, getIndicesInRange(0, 25)));
+		operations.add(new SetVisibility(C + 25));
+		operations.add(new SetVisibility(C + 26, visibleToW));
+		operations.add(new Shuffle(ImmutableList.<String> of("C26")));
+		operations.add(new Set(IS_GAMEOVER, YES));
+		operations.add(new EndGame(wId));
+		assertMoveOk(move(wId, simpleStateBeforeEndGameWTurn, operations,
+				WWinsTheGame));
+		assertEquals(operations, gameLogic.getExpectedOperations(
+				getCardIndex(25), gameLogic.gameApiStateToPokerState(
+						simpleStateBeforeEndGameWTurn, ColorOfPlayer.W,
+						testPlayerIds), testPlayerIds, null));
+	}
+
+	@Test
+	public void testGameEndWithBWins() {
+		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(bId));
+		operations.add(new Set(W, getCardIndex(27)));
+		operations.add(new Set(B, getCardIndex(26)));
+		operations.add(new Set(USED, getIndicesInRange(0, 25)));
+		operations.add(new Set(UNUSED, getIndicesInRange(28, 51)));
+		operations.add(new Set(P, 102));
+		operations.add(new SetVisibility(C + 25));
+		operations.add(new SetVisibility(C + 27, visibleToW));
+		operations.add(new Set(IS_GAMEOVER, YES));
+		operations.add(new EndGame(bId));
+		assertMoveOk(move(wId, simpleStateBeforeEndGameWTurn, operations,
+				BWinsTheGame));
+	}
+
+	private final Map<String, Object> gameContinueWithSubTwenty = ImmutableMap
+			.<String, Object> builder().put(W, getCardIndex(27))
+			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 25))
+			.put(UNUSED, getIndicesInRange(28, 51)).put(P, 79)
+			.put(C + 25, "Qd").put(DIRECTION, ANTICLOCKWISE).put(IS_SUB, YES)
+			.build();
+
+	private final Map<String, Object> gameContinueWithSubTen = ImmutableMap
+			.<String, Object> builder().put(W, getCardIndex(27))
+			.put(B, getCardIndex(26)).put(USED, getIndicesInRange(0, 25))
+			.put(UNUSED, getIndicesInRange(28, 51)).put(P, 79)
+			.put(C + 25, "Td").put(DIRECTION, ANTICLOCKWISE).put(IS_SUB, YES)
+			.build();
+
+	/*
+	 * To test the card represent a minus value(T(rank10) and Q)
+	 */
+	@Test
+	public void testMinusTwenty() {
+		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(bId));
+		operations.add(new Set(W, getCardIndex(27)));
+		operations.add(new Set(B, getCardIndex(26)));
+		operations.add(new Set(USED, getIndicesInRange(0, 25)));
+		operations.add(new Set(UNUSED, getIndicesInRange(28, 51)));
+		operations.add(new Set(P, 79));
+		operations.add(new SetVisibility(C + 25));
+		operations.add(new SetVisibility(C + 27, visibleToW));
+		operations.add(new Delete(IS_SUB));
+		assertMoveOk(move(wId, gameContinueWithSub, operations,
+				gameContinueWithSubTwenty));
+	}
+
+	@Test
+	public void testMinusTen() {
+		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(bId));
+		operations.add(new Set(W, getCardIndex(27)));
+		operations.add(new Set(B, getCardIndex(26)));
+		operations.add(new Set(USED, getIndicesInRange(0, 25)));
+		operations.add(new Set(UNUSED, getIndicesInRange(28, 51)));
+		operations.add(new Set(P, 89));
+		operations.add(new SetVisibility(C + 25));
+		operations.add(new SetVisibility(C + 27, visibleToW));
+		operations.add(new Delete(IS_SUB));
+		assertMoveOk(move(wId, gameContinueWithSub, operations,
+				gameContinueWithSubTen));
+	}
+
 }

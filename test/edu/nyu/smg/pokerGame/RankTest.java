@@ -33,7 +33,7 @@ public class RankTest {
 		assertEquals("7", rank7.getFirstLetter());
 		assertEquals("8", rank8.getFirstLetter());
 		assertEquals("9", rank9.getFirstLetter());
-		assertEquals("10", rank10.getFirstLetter());
+		assertEquals("T", rank10.getFirstLetter());
 		assertEquals("J", rank11.getFirstLetter());
 		assertEquals("Q", rank12.getFirstLetter());
 		assertEquals("K", rank13.getFirstLetter());	
@@ -41,7 +41,7 @@ public class RankTest {
 	
 	@Test
 	public void testFromFirstLetter(){
-		assertEquals(rank10, Rank.fromFirstLetter("10"));
+		assertEquals(rank10, Rank.fromFirstLetter("T"));
 		assertEquals(rank9, Rank.fromFirstLetter("9"));
 		assertEquals(rank8, Rank.fromFirstLetter("8"));
 		assertEquals(rank7, Rank.fromFirstLetter("7"));

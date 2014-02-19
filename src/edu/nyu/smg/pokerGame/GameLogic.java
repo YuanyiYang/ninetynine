@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -80,15 +79,15 @@ public class GameLogic {
 		if (lastApiState.isEmpty()) {
 			return getInitialMove(playerIds.get(0), playerIds.get(1));
 		}
+		ColorOfPlayer lastTurnPlayer = ColorOfPlayer.values()[playerIds
+				.indexOf(lastMovePlayerId)];
 		if (lastMove.contains(new Set(IS_SUB, YES))) {
-			return getNextMoveSub();
+			return getNextMoveSub(lastTurnPlayer, playerIds);
 		}
 		/*
 		 * We use last player's Id to make sure that the game state has
 		 * information about in the last state, which player has the turn.
 		 */
-		ColorOfPlayer lastTurnPlayer = ColorOfPlayer.values()[playerIds
-				.indexOf(lastMovePlayerId)];
 		PokerState lastState = gameApiStateToPokerState(lastApiState,
 				lastTurnPlayer, playerIds);
 		PokerState currentState = gameApiStateToPokerState(currentApiState,
@@ -121,8 +120,9 @@ public class GameLogic {
 		return getExpectedOperations(diffUsedPile, lastState, playerIds, card);
 	}
 
-	List<Operation> getNextMoveSub() {
-		return ImmutableList.<Operation> of(new Set(IS_SUB, YES));
+	List<Operation> getNextMoveSub(ColorOfPlayer lastTurnPlayer,List<Integer> playerIds) {
+		return ImmutableList.<Operation> of( new SetTurn(playerIds.get(lastTurnPlayer.ordinal())),
+				new Set(IS_SUB, YES));
 	}
 
 	/*
@@ -504,6 +504,8 @@ public class GameLogic {
 
 		List<Integer> newHandOfCurrentPlayer = concat(
 				subtract(lastHandOfCurrentPlayer, cardList), cardFromOpponent);
+		// pay special attention to the order here, this order will also
+		// influence the shuffle order
 		List<Integer> newHandOfOpponent = subtract(lastHandOfOpponent,
 				cardFromOpponent);
 		List<Integer> newUsedPile = concat(lastUnsed, cardList);
@@ -617,7 +619,7 @@ public class GameLogic {
 				(DirectionsOfTurn.valueOf((String) gameApiState.get(DIRECTION))),
 				gameApiState.containsKey(IS_GAMEOVER));
 	}
-	
+
 	List<String> getCardsInRange(int fromInclusive, int toInclusive) {
 		List<String> cards = Lists.newArrayList();
 		for (int i = fromInclusive; i <= toInclusive; i++) {
