@@ -37,8 +37,6 @@ public class GameLogicTest {
 	private final int wId = 41;
 	private final int bId = 42;
 	private static final String PLAYER_ID = "playerId";
-	private static final String TURN = "turn"; // turn of which player (either W
-												// or B)
 	private static final String W = "W"; // White hand
 	private static final String B = "B"; // Black hand
 	private static final String USED = "USED"; // Used pile
