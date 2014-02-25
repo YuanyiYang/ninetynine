@@ -144,7 +144,7 @@ public class GameLogicTest {
 
 	@Test
 	public void testGetInitialOperationsSize() {
-		assertEquals(5 + 52 + 52 + 1 + 2, gameLogic.getInitialMove(wId, bId)
+		assertEquals(5 + 52 + 52 + 1 + 2, gameLogic.getInitialMove(testPlayerIds)
 				.size());
 	}
 
@@ -211,6 +211,7 @@ public class GameLogicTest {
 	@Test
 	public void testNewRoundShuffle() {
 		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(wId));
 		operations.add(new Set(USED, ImmutableList.<Integer> of()));
 		operations.add(new Set(UNUSED, getIndicesInRange(0, 41)));
 		operations.add(new Shuffle(getCardsInRange(0, 41)));

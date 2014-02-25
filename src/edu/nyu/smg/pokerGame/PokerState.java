@@ -48,7 +48,7 @@ public class PokerState {
 		this.unused = checkNotNull(unused);
 		this.isSub = isSub;
 		this.points = points;
-		this.direction = direction;
+		this.direction = checkNotNull(direction);
 		this.isGameOver = isGameOver;
 	}
 

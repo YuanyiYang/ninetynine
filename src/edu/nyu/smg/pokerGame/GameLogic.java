@@ -16,7 +16,7 @@ import edu.nyu.smg.pokerGame.GameApi.*;
 public class GameLogic {
 
 	/*
-	 * How to handle the Is_Sub situation? Here is my approach. Fist use a Set
+	 * How to handle the Is_Sub situation? Here is my approach. First use a Set
 	 * operation to set the is_sub field in the state to be true. It represents
 	 * the next move is subtract ten or twenty. After the subtraction, use a
 	 * Delete operation to set the is_sub date field to be false(default).
@@ -52,10 +52,11 @@ public class GameLogic {
 	void checkMoveIsLegal(VerifyMove verifyMove) {
 		List<Operation> lastMove = verifyMove.getLastMove();
 		Map<String, Object> lastState = verifyMove.getLastState();
-		Map<String, Object> currentState = verifyMove.getState();
-		List<Operation> expectedOperations = getExpectedOperations(lastState,
-				currentState, lastMove, verifyMove.getPlayerIds(),
-				verifyMove.getLastMovePlayerId());
+		// Map<String, Object> currentState = verifyMove.getState();
+		List<Operation> expectedOperations = getExpectedOperations(verifyMove);
+		// List<Operation> expectedOperations = getExpectedOperations(lastState,
+		// currentState, lastMove, verifyMove.getPlayerIds(),
+		// verifyMove.getLastMovePlayerId());
 		check(expectedOperations.equals(lastMove), expectedOperations, lastMove);
 		// We use SetTurn, so we don't need to check that the correct player did
 		// the move. However, we do need to check the first move is done by the
@@ -71,13 +72,19 @@ public class GameLogic {
 	 * This function should be used when try to verify opponent's lastMove. In
 	 * the parameter, we pass in current state(which is not valid) to find out
 	 * the actual value of the card which opponent's played in the last move.
+	 * Parameters used in the past: Map<String, Object> lastApiState,
+	 * Map<String, Object> currentApiState, List<Operation> lastMove,
+	 * List<Integer> playerIds, int lastMovePlayerId
 	 */
 	@SuppressWarnings("unchecked")
-	List<Operation> getExpectedOperations(Map<String, Object> lastApiState,
-			Map<String, Object> currentApiState, List<Operation> lastMove,
-			List<Integer> playerIds, int lastMovePlayerId) {
+	List<Operation> getExpectedOperations(VerifyMove verifyMove) {
+		List<Operation> lastMove = verifyMove.getLastMove();
+		Map<String, Object> lastApiState = verifyMove.getLastState();
+		Map<String, Object> currentApiState = verifyMove.getState();
+		List<Integer> playerIds = verifyMove.getPlayerIds();
+		int lastMovePlayerId = verifyMove.getLastMovePlayerId();
 		if (lastApiState.isEmpty()) {
-			return getInitialMove(playerIds.get(0), playerIds.get(1));
+			return getInitialMove(playerIds);
 		}
 		ColorOfPlayer lastTurnPlayer = ColorOfPlayer.values()[playerIds
 				.indexOf(lastMovePlayerId)];
@@ -95,7 +102,7 @@ public class GameLogic {
 		List<Integer> lastUnUsed = lastState.getUnused();
 		List<Integer> lastUsed = lastState.getUsed();
 		if (lastUnUsed.isEmpty()) {
-			return getNewRoundOperations(lastState);
+			return getNewRoundOperations(lastState, lastTurnPlayer, playerIds);
 		}
 		/*
 		 * SetTurn, Set(W), Set(B), Set(Used)...
@@ -111,18 +118,16 @@ public class GameLogic {
 		Card card = currentState.getCards().get(diffUsedPile.get(0)).get();
 		/*
 		 * It seems there is no need to find out whether last move contains the
-		 * Delete operation or not.
+		 * Delete operation or not. The Delete 
 		 */
-		// if (lastMove.contains(new Delete(IS_SUB))) {
-		// return playAMinusCard(lastState, diffUsedPile, card.getCardRank()
-		// .getNumberValue(), playerIds);
-		// }
 		return getExpectedOperations(diffUsedPile, lastState, playerIds, card);
 	}
 
-	List<Operation> getNextMoveSub(ColorOfPlayer lastTurnPlayer,List<Integer> playerIds) {
-		return ImmutableList.<Operation> of( new SetTurn(playerIds.get(lastTurnPlayer.ordinal())),
-				new Set(IS_SUB, YES));
+	List<Operation> getNextMoveSub(ColorOfPlayer lastTurnPlayer,
+			List<Integer> playerIds) {
+		return ImmutableList.<Operation> of(
+				new SetTurn(playerIds.get(lastTurnPlayer.ordinal())), new Set(
+						IS_SUB, YES));
 	}
 
 	/*
@@ -132,11 +137,13 @@ public class GameLogic {
 	 * invisible to all. Set(used), Set(unused), Shuffle(),
 	 * SetVisibility(unused)
 	 */
-	List<Operation> getNewRoundOperations(PokerState pokerState) {
+	List<Operation> getNewRoundOperations(PokerState pokerState,
+			ColorOfPlayer lastTurnPlayer, List<Integer> playerIds) {
 		List<Integer> lastUsed = pokerState.getUsed();
 		List<Integer> newUsed = ImmutableList.<Integer> of();
 		List<Integer> newUnUsed = lastUsed;
 		List<Operation> operations = Lists.newArrayList();
+		operations.add(new SetTurn(playerIds.get(lastTurnPlayer.ordinal())));
 		operations.add(new Set(USED, newUsed));
 		operations.add(new Set(UNUSED, newUnUsed));
 		List<String> unusedNewCards = Lists.newArrayList();
@@ -181,8 +188,9 @@ public class GameLogic {
 	 */
 	public List<Operation> getExpectedOperations(List<Integer> cardList,
 			PokerState pokerState, List<Integer> playerIds, Card card) {
+		ColorOfPlayer lastTurnColor = pokerState.getTurn();
 		if (pokerState.getUnused().isEmpty()) {
-			return getNewRoundOperations(pokerState);
+			return getNewRoundOperations(pokerState, lastTurnColor, playerIds);
 		}
 		// First convert the INT id(0...51) into a string like "1c", "ks"
 		Integer cardId = cardList.get(0);
@@ -538,7 +546,9 @@ public class GameLogic {
 		return playANormalCard(pokerState, cardList, 99, playerIds);
 	}
 
-	List<Operation> getInitialMove(int whitePlayerId, int blackPlayerId) {
+	List<Operation> getInitialMove(List<Integer> playerIds) {
+		int whitePlayerId = playerIds.get(0);
+		int blackPlayerId = playerIds.get(1);
 		List<Operation> operations = Lists.newArrayList();
 		// The order of operations: turn, W, B, Used, UnUsed , C0...C51, Points,
 		// direction, isSub, isGameOver
