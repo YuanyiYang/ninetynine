@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -18,12 +18,20 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import edu.nyu.smg.pokerGame.GameApi.Container;
-import edu.nyu.smg.pokerGame.GameApi.Operation;
-import edu.nyu.smg.pokerGame.GameApi.SetTurn;
-import edu.nyu.smg.pokerGame.GameApi.UpdateUI;
-import edu.nyu.smg.pokerGame.PokerPresenter.PokerMessage;
-import edu.nyu.smg.pokerGame.PokerPresenter.View;
+import edu.nyu.smg.ninetyNine.client.Card;
+import edu.nyu.smg.ninetyNine.client.ColorOfPlayer;
+import edu.nyu.smg.ninetyNine.client.GameApi;
+import edu.nyu.smg.ninetyNine.client.GameLogic;
+import edu.nyu.smg.ninetyNine.client.PokerPresenter;
+import edu.nyu.smg.ninetyNine.client.PokerState;
+import edu.nyu.smg.ninetyNine.client.Rank;
+import edu.nyu.smg.ninetyNine.client.Suit;
+import edu.nyu.smg.ninetyNine.client.GameApi.Container;
+import edu.nyu.smg.ninetyNine.client.GameApi.Operation;
+import edu.nyu.smg.ninetyNine.client.GameApi.SetTurn;
+import edu.nyu.smg.ninetyNine.client.GameApi.UpdateUI;
+import edu.nyu.smg.ninetyNine.client.PokerPresenter.PokerMessage;
+import edu.nyu.smg.ninetyNine.client.PokerPresenter.View;
 
 public class PokerPresenterTest {
 

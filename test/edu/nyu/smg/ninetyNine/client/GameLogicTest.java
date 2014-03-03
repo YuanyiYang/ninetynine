@@ -1,7 +1,9 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static org.junit.Assert.*;
-import edu.nyu.smg.pokerGame.GameApi.*;
+import edu.nyu.smg.ninetyNine.client.ColorOfPlayer;
+import edu.nyu.smg.ninetyNine.client.GameLogic;
+import edu.nyu.smg.ninetyNine.client.GameApi.*;
 
 import java.util.ArrayList;
 import java.util.List;

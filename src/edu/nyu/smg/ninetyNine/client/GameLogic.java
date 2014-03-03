@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -11,15 +11,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import edu.nyu.smg.pokerGame.GameApi.Delete;
-import edu.nyu.smg.pokerGame.GameApi.EndGame;
-import edu.nyu.smg.pokerGame.GameApi.Operation;
-import edu.nyu.smg.pokerGame.GameApi.Set;
-import edu.nyu.smg.pokerGame.GameApi.SetTurn;
-import edu.nyu.smg.pokerGame.GameApi.SetVisibility;
-import edu.nyu.smg.pokerGame.GameApi.Shuffle;
-import edu.nyu.smg.pokerGame.GameApi.VerifyMove;
-import edu.nyu.smg.pokerGame.GameApi.VerifyMoveDone;
+import edu.nyu.smg.ninetyNine.client.GameApi.Delete;
+import edu.nyu.smg.ninetyNine.client.GameApi.EndGame;
+import edu.nyu.smg.ninetyNine.client.GameApi.Operation;
+import edu.nyu.smg.ninetyNine.client.GameApi.Set;
+import edu.nyu.smg.ninetyNine.client.GameApi.SetTurn;
+import edu.nyu.smg.ninetyNine.client.GameApi.SetVisibility;
+import edu.nyu.smg.ninetyNine.client.GameApi.Shuffle;
+import edu.nyu.smg.ninetyNine.client.GameApi.VerifyMove;
+import edu.nyu.smg.ninetyNine.client.GameApi.VerifyMoveDone;
 
 public class GameLogic {
 

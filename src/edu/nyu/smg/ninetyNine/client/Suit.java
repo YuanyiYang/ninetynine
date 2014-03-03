@@ -1,7 +1,7 @@
 /**
  * Suit class given in the lecture. 
  */
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import java.util.Comparator;
 

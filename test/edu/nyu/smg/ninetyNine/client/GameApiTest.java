@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import edu.nyu.smg.pokerGame.GameApi.*;
+import edu.nyu.smg.ninetyNine.client.GameApi;
+import edu.nyu.smg.ninetyNine.client.GameApi.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

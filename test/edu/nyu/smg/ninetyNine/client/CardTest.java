@@ -1,7 +1,13 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static org.junit.Assert.*;
+
 import com.google.common.collect.*;
+
+import edu.nyu.smg.ninetyNine.client.Card;
+import edu.nyu.smg.ninetyNine.client.Rank;
+import edu.nyu.smg.ninetyNine.client.Suit;
+
 import java.util.*;
 
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
+
+import edu.nyu.smg.ninetyNine.client.Card;
+import edu.nyu.smg.ninetyNine.client.Player;
 
 public class StateTest {
 

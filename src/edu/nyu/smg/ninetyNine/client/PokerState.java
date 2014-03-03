@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

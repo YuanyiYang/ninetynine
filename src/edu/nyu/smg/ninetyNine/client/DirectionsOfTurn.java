@@ -4,7 +4,7 @@
  *
  */
 
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 public enum DirectionsOfTurn {
 	Clockwise, AntiClockwise;

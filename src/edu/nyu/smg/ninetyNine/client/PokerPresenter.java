@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -8,7 +8,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import edu.nyu.smg.pokerGame.GameApi.*;
+import edu.nyu.smg.ninetyNine.client.GameApi.*;
 
 /**
  * The presenter that controls the poker99 graphics. We use the MVP pattern: the

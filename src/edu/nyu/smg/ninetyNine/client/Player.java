@@ -1,4 +1,4 @@
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import java.util.ArrayList;
 import com.google.gwt.thirdparty.guava.common.base.Objects;

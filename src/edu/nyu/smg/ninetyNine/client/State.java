@@ -2,7 +2,7 @@
  * The design principal of this game state is that it don't depend on certain beginning state of the 
  * game. For instance, when initiated, the cards should be given by the caller class.
  */
-package edu.nyu.smg.pokerGame;
+package edu.nyu.smg.ninetyNine.client;
 
 import java.util.*;
 
