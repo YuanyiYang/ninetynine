@@ -11,7 +11,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import edu.nyu.smg.pokerGame.GameApi.*;
+import edu.nyu.smg.pokerGame.GameApi.Delete;
+import edu.nyu.smg.pokerGame.GameApi.EndGame;
+import edu.nyu.smg.pokerGame.GameApi.Operation;
+import edu.nyu.smg.pokerGame.GameApi.Set;
+import edu.nyu.smg.pokerGame.GameApi.SetTurn;
+import edu.nyu.smg.pokerGame.GameApi.SetVisibility;
+import edu.nyu.smg.pokerGame.GameApi.Shuffle;
+import edu.nyu.smg.pokerGame.GameApi.VerifyMove;
+import edu.nyu.smg.pokerGame.GameApi.VerifyMoveDone;
 
 public class GameLogic {
 
@@ -26,6 +34,7 @@ public class GameLogic {
 	 * The entries used in the poker game are: turn:W/B, W, B, Used, Unused,
 	 * points, C0...C51, direction:clockwise, isSub:false, isGameOver:false
 	 */
+	
 
 	private static final String W = "W"; // White hand
 	private static final String B = "B"; // Black hand

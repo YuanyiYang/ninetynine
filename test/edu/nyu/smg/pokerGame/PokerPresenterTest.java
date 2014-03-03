@@ -1,10 +1,9 @@
 package edu.nyu.smg.pokerGame;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +18,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import edu.nyu.smg.pokerGame.GameApi.*;
-import edu.nyu.smg.pokerGame.PokerPresenter.View;
+import edu.nyu.smg.pokerGame.GameApi.Container;
+import edu.nyu.smg.pokerGame.GameApi.Operation;
+import edu.nyu.smg.pokerGame.GameApi.SetTurn;
+import edu.nyu.smg.pokerGame.GameApi.UpdateUI;
 import edu.nyu.smg.pokerGame.PokerPresenter.PokerMessage;
+import edu.nyu.smg.pokerGame.PokerPresenter.View;
 
 public class PokerPresenterTest {
 

@@ -157,7 +157,6 @@ public class PokerPresenter {
 		selectedCards = Lists.newArrayList();
 
 		if (updateUI.isAiPlayer()) {
-			// TODO: implement AI in a later HW!
 			// container.sendMakeMove(..);
 			return;
 		}
