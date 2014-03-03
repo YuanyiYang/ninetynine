@@ -40,25 +40,11 @@ public class CardTest {
 	 * This test method is to demonstrate that in the immutableList, the data field of the inner 
 	 * object still could be changed.
 	 */
-	@Test
-	public void ImmutableListTest(){
-		List<Card> cards = ImmutableList.<Card>of(card1,card2);
-		assertEquals(false, cards.get(0).isMinus());
-		cards.get(0).setMinus(true);
-		assertTrue(cards.get(0).isMinus());
-	}
+
 	
 	/*
 	 * The same test to test immutableMap.
 	 */
-	@Test
-	public void ImmutableMapTest(){
-		Map<String, Object> cards = ImmutableMap.<String, Object>of(
-				"1",card1,
-				"2",card2);
-		assertFalse(((Card) cards.get("1")).isMinus());
-		((Card)cards.get("1")).setMinus(true);
-		assertTrue(((Card) cards.get("1")).isMinus());
-	}
+
 	
 }

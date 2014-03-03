@@ -1,45 +1,21 @@
 package edu.nyu.smg.ninetyNine.client;
 
-import com.google.common.base.*;
-public class Card {
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class Card extends Equality implements Comparable<Card> {
 
 	private Rank cardRank;
 	private Suit cardSuit;
-	private boolean isMinus;
 
 	protected Card() {
 		cardRank = null;
 		cardSuit = null;
-		isMinus = false;
 	}
 
 	public Card(Rank cardRank, Suit cardSuit) {
 		this.cardRank = cardRank;
 		this.cardSuit = cardSuit;
-		this.isMinus = false;
-	}
-
-	public Card(Rank cardRank, Suit cardSuit, boolean isMinus) {
-		this(cardRank, cardSuit);
-		this.isMinus = isMinus;
-	}
-
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj==null){
-			return false;
-		}else if(!(obj instanceof Card)){
-			return false;
-		}else{
-			return Objects.equal(this.cardRank, ((Card)obj).getCardRank()) &&
-					Objects.equal(this.cardSuit, ((Card)obj).getCardSuit());
-		}
-	}
-	
-	@Override
-	public int hashCode(){
-		return Objects.hashCode(this.cardRank,this.cardSuit);
 	}
 	
 	/**
@@ -69,12 +45,24 @@ public class Card {
 		this.cardSuit = cardSuit;
 	}
 
-	public boolean isMinus() {
-		return isMinus;
+	public static final Comparator<Card> COMPARATOR = new Comparator<Card>() {
+
+		@Override
+		public int compare(Card o1, Card o2) {
+			int rank = o1.cardRank.compareTo(o2.cardRank);
+			int suit = o1.cardSuit.compareTo(o2.cardSuit);
+			return rank == 0 ? suit : rank;
+		}
+	};
+	
+	@Override
+	public int compareTo(Card o) {
+		return COMPARATOR.compare(this, o);
 	}
 
-	public void setMinus(boolean isMinus) {
-		this.isMinus = isMinus;
+	@Override
+	public Object getId() {
+		return Arrays.asList(getCardRank(),getCardSuit());
 	}
 	
 }

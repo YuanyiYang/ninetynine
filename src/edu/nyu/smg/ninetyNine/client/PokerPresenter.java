@@ -26,11 +26,11 @@ public class PokerPresenter {
 	 * should choose card with Rank 10 or face card Queen serving as a negative
 	 * value card. HAS_WINNER: to suggest that we have a winner right now.
 	 */
-	enum PokerMessage {
+	public enum PokerMessage {
 		INVISIBLE, NEXT_MOVE_SUB, HAS_WINNER;
 	}
 
-	interface View {
+	public interface View {
 		/**
 		 * Sets the presenter. The viewer will call certain methods on the
 		 * presenter, e.g., when a card is selected ({@link #cardSelected}),
@@ -199,7 +199,7 @@ public class PokerPresenter {
 	 * Add/Remove card from the {@link #selectedCards}. The view can only call
 	 * this method if the presenter called {@link View#chooseNextCard}
 	 */
-	void cardSelected(Card card) {
+	public void cardSelected(Card card) {
 		check(isMyTurn() && !pokerState.isGameOver());
 		if (selectedCards.contains(card)) {
 			selectedCards.remove(card);
@@ -216,7 +216,7 @@ public class PokerPresenter {
 	 * if the presenter called {@link View#chooseNextCard} and one card was
 	 * selected by calling {@link #cardSelected}.
 	 */
-	void finishedSelectingCards() {
+	public void finishedSelectingCards() {
 		check(isMyTurn() && !selectedCards.isEmpty());
 		container.sendMakeMove(gameLogic.getExpectedOperations(
 				findCardIndex(selectedCards), pokerState, playerIds, null));

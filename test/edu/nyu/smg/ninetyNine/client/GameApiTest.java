@@ -35,7 +35,7 @@ public class GameApiTest {
 	SetRandomInteger setRandomInteger = new SetRandomInteger("xcv", 23, 54);
 	List<Operation> operations = Arrays.asList(set, setRandomInteger, set);
 
-	List<HasEquality> messages = Arrays.<HasEquality> asList(
+	List<Message> messages = Arrays.<Message> asList(
 			new UpdateUI(42, playersInfo, state, lastState, operations, 12,
 					ImmutableMap.of(42, 1)), new VerifyMove(playersInfo, state,
 					lastState, operations, 23, ImmutableMap.of(42, 33)), set,
@@ -47,16 +47,16 @@ public class GameApiTest {
 
 	@Test
 	public void testSerialization() {
-		for (HasEquality equality : messages) {
+		for (Message equality : messages) {
 			assertEquals(equality,
-					HasEquality.messageToHasEquality(equality.toMessage()));
+					Message.messageToHasEquality(equality.toMessage()));
 		}
 	}
 
 	@Test
 	public void testEquals() {
-		for (HasEquality equality : messages) {
-			for (HasEquality equalityOther : messages) {
+		for (Message equality : messages) {
+			for (Message equalityOther : messages) {
 				if (equality != equalityOther) {
 					assertNotEquals(equality, equalityOther);
 				}
