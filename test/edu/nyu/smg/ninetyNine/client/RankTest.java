@@ -1,11 +1,8 @@
 package edu.nyu.smg.ninetyNine.client;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import edu.nyu.smg.ninetyNine.client.Rank;
 
 public class RankTest {
 

@@ -2,7 +2,6 @@ package edu.nyu.smg.ninetyNine.client;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.smg.ninetyNine.client.DirectionsOfTurn;
