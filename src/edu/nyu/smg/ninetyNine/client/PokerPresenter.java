@@ -55,7 +55,8 @@ public class PokerPresenter {
 		 * Sets the state for a player (whether the player has the turn or not).
 		 */
 		void setPlayerState(int numberOfOpponentCards,
-				int numberOfCardsInUsedPile, int numberOfCardsInUnusedPile,
+				List<Card> usedCards,
+				int numberOfCardsInUnusedPile, // int numberOfCardsInUsedPile,
 				List<Card> myCards, int point, boolean isClockwise,
 				PokerMessage pokerMessage);
 
@@ -153,7 +154,7 @@ public class PokerPresenter {
 				sendNextNewRound();
 			}
 			return;
-		} 
+		}
 		selectedCards = Lists.newArrayList();
 
 		if (updateUI.isAiPlayer()) {
@@ -173,8 +174,9 @@ public class PokerPresenter {
 		List<Integer> opponentCards = pokerState
 				.getWhiteOrBlack(opponentColorOfPlayer);
 		List<Integer> unusedPile = pokerState.getUnused();
-		List<Integer> usedPile = pokerState.getUsed();
-		pokerView.setPlayerState(opponentCards.size(), usedPile.size(),
+		// List<Integer> usedPile = pokerState.getUsed();
+		pokerView.setPlayerState(opponentCards.size(),
+				getUsedCards(),// usedPile.size(),
 				unusedPile.size(), getMyCards(), pokerState.getPoints(),
 				isClockWise(), getPokerMessage());
 		if (isMyTurn()) {
@@ -188,6 +190,7 @@ public class PokerPresenter {
 			 * the presenter. The method in the presented will call the
 			 * container to generate the operations.
 			 */
+
 			if (opponentCards.size() > 0 && !pokerState.isGameOver()) {
 				chooseNextCard();
 			}
@@ -195,6 +198,25 @@ public class PokerPresenter {
 
 	}
 
+	/**
+	 * The view will set this field to be true so that these operations are sent
+	 * out before the normal card play.
+	 */
+	public void viewsetSubField(boolean isSub) {
+		if(isSub){
+			pokerViewChooseToSetIsSub();
+		}
+	}
+	
+	/**
+	 * The view(i.e the actual player) choose to set the IS_SUB field. This
+	 * method should be called by {@link View#chooseNextMoveSub(boolean)}.
+	 */
+	void pokerViewChooseToSetIsSub() {
+		container.sendMakeMove(gameLogic.getNextMoveSub(thisTurnColor,
+				playerIds));
+	}
+	
 	/**
 	 * Add/Remove card from the {@link #selectedCards}. The view can only call
 	 * this method if the presenter called {@link View#chooseNextCard}
@@ -247,15 +269,6 @@ public class PokerPresenter {
 		return pokerState.getDirection().isClockwise();
 	}
 
-	/**
-	 * The view(i.e the actual player) choose to set the IS_SUB field. This
-	 * method should be called by {@link View#chooseNextMoveSub(boolean)}.
-	 */
-	void pokerViewChooseToSetIsSub() {
-		container.sendMakeMove(gameLogic.getNextMoveSub(thisTurnColor,
-				playerIds));
-	}
-
 	private void chooseNextCard() {
 		pokerView.chooseNextCard(Lists.newArrayList(selectedCards),
 				gameLogic.subtract(getMyCards(), selectedCards));
@@ -269,6 +282,17 @@ public class PokerPresenter {
 			myCards.add(cards.get(cardIndex).get());
 		}
 		return myCards;
+	}
+
+	private List<Card> getUsedCards() {
+		checkNotNull(pokerState);
+		List<Card> usedCards = Lists.newArrayList();
+		ImmutableList<Optional<Card>> cards = pokerState.getCards();
+		List<Integer> middlePile = pokerState.getUsed();
+		for (Integer cardIndex : middlePile) {
+			usedCards.add(cards.get(cardIndex).get());
+		}
+		return usedCards;
 	}
 
 	private void sendInitialMove(List<Integer> playersId) {

@@ -50,6 +50,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	Button submitButton;
 	@UiField
 	Button subtractButton;
+	@UiField
+	HorizontalPanel mesg;
 	
 	private boolean enableClicks = false;
 	private final CardImageSupplier cardImageSupplier;
@@ -129,6 +131,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	}
 	
 	private void alertPokerMessage(PokerMessage pokerMessage){
+		mesg.clear();
 		String message = "";
 		switch (pokerMessage) {
 		case NEXT_MOVE_SUB:
@@ -144,14 +147,22 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		if(message.isEmpty()){
 			return;
 		}
-		new PopupChoices(message);
+		Label label = new Label(message);
+		mesg.add(label);
 	}
 	
 	
 	@UiHandler("submitButton")
 	void onClickSubmitButton(ClickEvent e){
+		subtractButton.setEnabled(true);
 		disableSubmitClicks();
 		pokerPresenter.finishedSelectingCards();
+	}
+	
+	@UiHandler("subtractButton")
+	void onClickSubtractButton(ClickEvent e){
+		subtractButton.setEnabled(false);
+		chooseNextMoveSub(true);
 	}
 	
 	@Override
@@ -163,7 +174,6 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	public void setViewerState(int numberOfWhiteCards, int numberOfBlackCards,
 			int numberOfCardsInUsedPile, int numberOfCardsInUnusedPile,
 			int point, boolean isClockwise, PokerMessage pokerMessage) {
-		// TODO Auto-generated method stub
 		placeImages(playerArea, createBackCards(numberOfWhiteCards));
 		placeImages(selectedArea, ImmutableList.<Image>of());
 		placeImages(opponentArea, createBackCards(numberOfBlackCards));
@@ -176,14 +186,14 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 
 	@Override
 	public void setPlayerState(int numberOfOpponentCards,
-			int numberOfCardsInUsedPile, int numberOfCardsInUnusedPile,
+			List<Card> usedCards, int numberOfCardsInUnusedPile,     // int numberOfCardsInUsedPile
 			List<Card> myCards, int point, boolean isClockwise,
 			PokerMessage pokerMessage) {
 		Collections.sort(myCards);
 		placeImages(playerArea, createCardImages(myCards, false));
 		placeImages(selectedArea, ImmutableList.<Image>of());
 		placeImages(opponentArea, createBackCards(numberOfOpponentCards));
-		placeImages(usedArea, createBackCards(numberOfCardsInUsedPile));             //
+		placeImages(usedArea, createCardImages(usedCards, false));             //createBackCards(numberOfCardsInUsedPile)
 		placeImages(unUsedArea, createBackCards(numberOfCardsInUnusedPile));
 		placeString(points, point+"");
 		placeString(direction, directionString(isClockwise));
@@ -204,8 +214,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	
 	@Override
 	public void chooseNextMoveSub(boolean isSub) {
-		// TODO Auto-generated method stub
-		
+		pokerPresenter.viewsetSubField(isSub);	
 	}
 
 }

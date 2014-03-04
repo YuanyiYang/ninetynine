@@ -128,14 +128,14 @@ public class PokerPresenterTest {
 	@Test
 	public void testEmptyUsedStateForBInWTurn() {
 		pokerPresenter.updateUI(createUpdateUI(bId, emptyUsedState, wId));
-		verify(mockView).setPlayerState(5, 0, 42, getCards(5, 10), 0, true,
+		verify(mockView).setPlayerState(5, ImmutableList.<Card>of(), 42, getCards(5, 10), 0, true,
 				PokerMessage.INVISIBLE);
 	}
 
 	@Test
 	public void testEmptyUsedStateForWInWTurn() {
 		pokerPresenter.updateUI(createUpdateUI(wId, emptyUsedState, wId));
-		verify(mockView).setPlayerState(5, 0, 42, getCards(0, 5), 0, true,
+		verify(mockView).setPlayerState(5, ImmutableList.<Card>of(), 42, getCards(0, 5), 0, true,
 				PokerMessage.INVISIBLE);
 		verify(mockView).chooseNextCard(ImmutableList.<Card> of(),
 				getCards(0, 5));
@@ -144,7 +144,7 @@ public class PokerPresenterTest {
 	@Test
 	public void testEmptyUsedStateForBInBTurn() {
 		pokerPresenter.updateUI(createUpdateUI(bId, emptyUsedState, bId));
-		verify(mockView).setPlayerState(5, 0, 42, getCards(5, 10), 0, true,
+		verify(mockView).setPlayerState(5, ImmutableList.<Card>of(), 42, getCards(5, 10), 0, true,
 				PokerMessage.INVISIBLE);
 		verify(mockView).chooseNextCard(ImmutableList.<Card> of(),
 				getCards(5, 10));
@@ -153,7 +153,7 @@ public class PokerPresenterTest {
 	@Test
 	public void testEmptyUsedStateForWInBTurn() {
 		pokerPresenter.updateUI(createUpdateUI(wId, emptyUsedState, bId));
-		verify(mockView).setPlayerState(5, 0, 42, getCards(0, 5), 0, true,
+		verify(mockView).setPlayerState(5, ImmutableList.<Card>of(), 42, getCards(0, 5), 0, true,
 				PokerMessage.INVISIBLE);
 	}
 
@@ -168,7 +168,7 @@ public class PokerPresenterTest {
 	@Test
 	public void testNonEmptyUsedStateForWTurnOfW() {
 		pokerPresenter.updateUI(createUpdateUI(wId, nonEmptyUsedState, wId));
-		verify(mockView).setPlayerState(5, 10, 32, getCards(0, 5), 50, false,
+		verify(mockView).setPlayerState(5, getCards(10, 20), 32, getCards(0, 5), 50, false,
 				PokerMessage.INVISIBLE);
 		verify(mockView).chooseNextCard(ImmutableList.<Card> of(),
 				getCards(0, 5));
@@ -177,14 +177,14 @@ public class PokerPresenterTest {
 	@Test
 	public void testNonEmptyUsedStateForBTurnOfW() {
 		pokerPresenter.updateUI(createUpdateUI(bId, nonEmptyUsedState, wId));
-		verify(mockView).setPlayerState(5, 10, 32, getCards(5, 10), 50, false,
+		verify(mockView).setPlayerState(5, getCards(10, 20), 32, getCards(5, 10), 50, false,
 				PokerMessage.INVISIBLE);
 	}
 
 	@Test
 	public void testNonEmptyUsedStateForBTurnOfB() {
 		pokerPresenter.updateUI(createUpdateUI(bId, nonEmptyUsedState, bId));
-		verify(mockView).setPlayerState(5, 10, 32, getCards(5, 10), 50, false,
+		verify(mockView).setPlayerState(5, getCards(10, 20), 32, getCards(5, 10), 50, false,
 				PokerMessage.INVISIBLE);
 		verify(mockView).chooseNextCard(ImmutableList.<Card> of(),
 				getCards(5, 10));
@@ -193,7 +193,7 @@ public class PokerPresenterTest {
 	@Test
 	public void testNonEmptyUsedStateForWTurnOfB() {
 		pokerPresenter.updateUI(createUpdateUI(wId, nonEmptyUsedState, bId));
-		verify(mockView).setPlayerState(5, 10, 32, getCards(0, 5), 50, false,
+		verify(mockView).setPlayerState(5, getCards(10, 20), 32, getCards(0, 5), 50, false,
 				PokerMessage.INVISIBLE);
 	}
 
@@ -259,7 +259,7 @@ public class PokerPresenterTest {
 	public void testHasWinnerPointsExceedStateWTurnOfW() {
 		pokerPresenter.updateUI(createUpdateUI(wId,
 				hasWinnerPointsExceededState, wId));
-		verify(mockView).setPlayerState(5, 20, 22, getCards(0, 5), 100, true,
+		verify(mockView).setPlayerState(5, getCards(10, 30), 22, getCards(0, 5), 100, true,
 				PokerMessage.HAS_WINNER);
 	}
 
@@ -267,7 +267,7 @@ public class PokerPresenterTest {
 	public void testHasWinnerPointsExceedStateBTurnOfW() {
 		pokerPresenter.updateUI(createUpdateUI(bId,
 				hasWinnerPointsExceededState, wId));
-		verify(mockView).setPlayerState(5, 20, 22, getCards(5, 10), 100, true,
+		verify(mockView).setPlayerState(5, getCards(10, 30), 22, getCards(5, 10), 100, true,
 				PokerMessage.HAS_WINNER);
 	}
 
@@ -281,7 +281,7 @@ public class PokerPresenterTest {
 	@Test
 	public void testNextMoveSubWTurnOfW() {
 		pokerPresenter.updateUI(createUpdateUI(wId, nextMoveSubState, wId));
-		verify(mockView).setPlayerState(10, 10, 22, getCards(0, 10), 40, true,
+		verify(mockView).setPlayerState(10, getCards(20, 30), 22, getCards(0, 10), 40, true,
 				PokerMessage.NEXT_MOVE_SUB);
 		verify(mockView).chooseNextCard(ImmutableList.<Card> of(),
 				getCards(0, 10));
@@ -290,7 +290,7 @@ public class PokerPresenterTest {
 	@Test
 	public void testNextMoveSubBTurnOfW() {
 		pokerPresenter.updateUI(createUpdateUI(bId, nextMoveSubState, wId));
-		verify(mockView).setPlayerState(10, 10, 22, getCards(10, 20), 40, true,
+		verify(mockView).setPlayerState(10, getCards(20, 30), 22, getCards(10, 20), 40, true,
 				PokerMessage.NEXT_MOVE_SUB);
 	}
 
