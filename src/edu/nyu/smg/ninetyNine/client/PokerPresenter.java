@@ -209,6 +209,7 @@ public class PokerPresenter {
 			selectedCards.clear();
 			selectedCards.add(card);
 		}
+		chooseNextCard();
 	}
 
 	/**
@@ -238,7 +239,7 @@ public class PokerPresenter {
 	private List<Integer> findCardIndex(List<Card> listCard) {
 		checkNotNull(pokerState);
 		return ImmutableList.<Integer> of(pokerState.getCards().indexOf(
-				listCard.get(0)));
+				Optional.of(listCard.get(0))));
 	}
 
 	private boolean isClockWise() {
@@ -256,7 +257,7 @@ public class PokerPresenter {
 	}
 
 	private void chooseNextCard() {
-		pokerView.chooseNextCard(ImmutableList.<Card> copyOf(selectedCards),
+		pokerView.chooseNextCard(Lists.newArrayList(selectedCards),
 				gameLogic.subtract(getMyCards(), selectedCards));
 	}
 

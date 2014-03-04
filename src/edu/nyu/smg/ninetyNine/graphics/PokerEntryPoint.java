@@ -14,6 +14,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
 public class PokerEntryPoint implements EntryPoint{
 	
 	IteratingPlayerContainer container;
@@ -56,7 +59,7 @@ public class PokerEntryPoint implements EntryPoint{
 		flowPanel.add(playerSelect);
 		RootPanel.get("mainDiv").add(flowPanel);
 		container.sendGameReady();
-		  container.updateUi(container.getPlayerIds().get(0));
+		container.updateUi(container.getPlayerIds().get(0));
 	}
 
 }

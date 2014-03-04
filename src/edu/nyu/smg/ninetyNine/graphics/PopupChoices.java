@@ -22,6 +22,12 @@ public class PopupChoices extends DialogBox {
 
 	private Button firstChoice;
 
+	public PopupChoices(String mainText){
+		super(false, true);
+		setText(mainText);
+		setAnimationEnabled(true);
+	}
+	
 	public PopupChoices(String mainText, List<String> options,
 			final OptionChosen optionChosen) {
 		super(false, true);

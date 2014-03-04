@@ -130,7 +130,6 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	
 	private void alertPokerMessage(PokerMessage pokerMessage){
 		String message = "";
-		List<String> options = Lists.newArrayList();
 		switch (pokerMessage) {
 		case NEXT_MOVE_SUB:
 			message += "The player's next move is to substract points!";
@@ -145,17 +144,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		if(message.isEmpty()){
 			return;
 		}
-		if(options.isEmpty()){
-			options.add("OK");
-		}
-		new PopupChoices(message, options, new PopupChoices.OptionChosen(){
-
-			@Override
-			public void optionChosen(String option) {
-				// TODO Auto-generated method stub
-				
-			}
-		}).center();
+		new PopupChoices(message);
 	}
 	
 	
@@ -194,7 +183,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		placeImages(playerArea, createCardImages(myCards, false));
 		placeImages(selectedArea, ImmutableList.<Image>of());
 		placeImages(opponentArea, createBackCards(numberOfOpponentCards));
-		placeImages(usedArea, createBackCards(numberOfCardsInUsedPile));
+		placeImages(usedArea, createBackCards(numberOfCardsInUsedPile));             //
 		placeImages(unUsedArea, createBackCards(numberOfCardsInUnusedPile));
 		placeString(points, point+"");
 		placeString(direction, directionString(isClockwise));
@@ -212,6 +201,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		submitButton.setEnabled(!selectedCards.isEmpty());
 	}
 
+	
 	@Override
 	public void chooseNextMoveSub(boolean isSub) {
 		// TODO Auto-generated method stub

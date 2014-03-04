@@ -6,8 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -274,7 +273,7 @@ public final class GameApi {
 		}
 
 		public List<Integer> getPlayerIds() {
-			List<Integer> playerIds = new ArrayList<Integer>();
+			List<Integer> playerIds = new ArrayList<>();
 			for (Map<String, Object> playerInfo : getPlayersInfo()) {
 				playerIds.add((Integer) playerInfo.get(PLAYER_ID));
 			}
@@ -381,7 +380,7 @@ public final class GameApi {
 		}
 
 		public EndGame(int winnerPlayerId) {
-			Map<Integer, Integer> strPlayerIdToScore = new HashMap<Integer, Integer>();
+			Map<Integer, Integer> strPlayerIdToScore = new HashMap<>();
 			strPlayerIdToScore.put(winnerPlayerId, 1);
 			this.playerIdToScore = ImmutableMap.copyOf(strPlayerIdToScore);
 		}
@@ -801,9 +800,9 @@ public final class GameApi {
 				return false;
 			}
 			Message other = (Message) obj;
-			return Objects.equal(other.getFieldsNameAndValue(),
+			return Objects.equals(other.getFieldsNameAndValue(),
 					getFieldsNameAndValue())
-					&& Objects.equal(other.getMessageName(), getMessageName());
+					&& Objects.equals(other.getMessageName(), getMessageName());
 		}
 
 		@Override
@@ -815,7 +814,7 @@ public final class GameApi {
 			if (values.isEmpty() || !(values.get(0) instanceof Message)) {
 				return values;
 			}
-			List<Object> messages = new ArrayList<Object>();
+			List<Object> messages = new ArrayList<>();
 			for (Object operation : values) {
 				messages.add(((Message) operation).toMessage());
 			}
@@ -823,7 +822,7 @@ public final class GameApi {
 		}
 
 		public Map<String, Object> toMessage() {
-			Map<String, Object> message = new HashMap<String, Object>();
+			Map<String, Object> message = new HashMap<>();
 			message.put("type", getMessageName());
 			List<Object> fieldsNameAndValue = getFieldsNameAndValue();
 			for (int i = 0; i < fieldsNameAndValue.size() / 2; i++) {
@@ -844,7 +843,7 @@ public final class GameApi {
 		private static List<Operation> messageToOperationList(
 				Object operationMessagesObj) {
 			List<?> operationMessages = (List<?>) operationMessagesObj;
-			List<Operation> operations = new ArrayList<Operation>();
+			List<Operation> operations = new ArrayList<>();
 			for (Object operationMessage : operationMessages) {
 				operations
 						.add((Operation) messageToHasEquality((Map<String, Object>) operationMessage));
@@ -855,7 +854,73 @@ public final class GameApi {
 		@SuppressWarnings("unchecked")
 		public static Message messageToHasEquality(Map<String, Object> message) {
 			String type = (String) message.get("type");
-			if ("UpdateUI".equals(type)) {
+			// Message type = (Message)message.get("type");
+			// if("UpdateUI".equals(type)){
+			// return new UpdateUI(
+			// (Integer) message.get("yourPlayerId"),
+			// (List<Map<String, Object>>) message.get("playersInfo"),
+			// (Map<String, Object>) message.get("state"),
+			// (Map<String, Object>) message.get("lastState"),
+			// messageToOperationList(message.get("lastMove")),
+			// (Integer) message.get("lastMovePlayerId"),
+			// toIntegerMap(message.get("playerIdToNumberOfTokensInPot")));
+			// }else if("VerifyMove".equals(type)){
+			// return new VerifyMove(
+			// (List<Map<String, Object>>) message.get("playersInfo"),
+			// (Map<String, Object>) message.get("state"),
+			// (Map<String, Object>) message.get("lastState"),
+			// messageToOperationList(message.get("lastMove")),
+			// (Integer) message.get("lastMovePlayerId"),
+			// toIntegerMap(message.get("playerIdToNumberOfTokensInPot")));
+			// }else if("EndGame".equals(type)){
+			// return new EndGame(toIntegerMap(message.get("playerIdToScore")));
+			// }else if("Set".equals(type)){
+			// return new Set((String) message.get("key"),
+			// message.get("value"),
+			// message.get("visibleToPlayerIds"));
+			// }else if("SetRandomInteger".equals(type)){
+			// return new SetRandomInteger(
+			// (String) message.get("key"),
+			// (Integer) message.get("from"),
+			// (Integer) message.get("to"));
+			// }else if("SetVisibility".equals(type)){
+			// return new SetVisibility(
+			// (String) message.get("key"),
+			// message.get("visibleToPlayerIds"));
+			// }else if("SetTurn".equals(type)){
+			// return new SetTurn((Integer) message.get("playerId"),
+			// (Integer) message.get("numberOfSecondsForTurn"));
+			// }else if("Delete".equals(type)){
+			// return new Delete((String) message.get("key"));
+			// }else if("AttemptChangeTokens".equals(type)){
+			// return new
+			// AttemptChangeTokens(toIntegerMap(message.get("playerIdToTokenChange")),
+			// toIntegerMap(message.get("playerIdToNumberOfTokensInPot")));
+			// }else if("Shuffle".equals(type)){
+			// return new Shuffle((List<String>) message.get("keys"));
+			// }else if("GameReady".equals(type)){
+			// return new GameReady();
+			// }else if("MakeMove".equals(type)){
+			// return new
+			// MakeMove(messageToOperationList(message.get("operations")));
+			// }else if("VerifyMoveDone".equals(type)){
+			// return new VerifyMoveDone(
+			// (Integer) message.get("hackerPlayerId"),
+			// (String) message.get("message"));
+			// }else if("RequestManipulator".equals(type)){
+			// return new RequestManipulator();
+			// }else if ("ManipulateState".equals(type)){
+			// return new ManipulateState((Map<String, Object>)
+			// message.get("state"));
+			// }else if("ManipulationDone".equals(type)){
+			// return new
+			// ManipulationDone(messageToOperationList(message.get("operations")));
+			// }else{
+			// return null;
+			// }
+
+			switch (type) {
+			case "UpdateUI":
 				return new UpdateUI((Integer) message.get("yourPlayerId"),
 						(List<Map<String, Object>>) message.get("playersInfo"),
 						(Map<String, Object>) message.get("state"),
@@ -864,7 +929,8 @@ public final class GameApi {
 						(Integer) message.get("lastMovePlayerId"),
 						toIntegerMap(message
 								.get("playerIdToNumberOfTokensInPot")));
-			} else if ("VerifyMove".equals(type)) {
+
+			case "VerifyMove":
 				return new VerifyMove(
 						(List<Map<String, Object>>) message.get("playersInfo"),
 						(Map<String, Object>) message.get("state"),
@@ -873,122 +939,72 @@ public final class GameApi {
 						(Integer) message.get("lastMovePlayerId"),
 						toIntegerMap(message
 								.get("playerIdToNumberOfTokensInPot")));
-			} else if ("EndGame".equals(type)) {
+
+			case "EndGame":
 				return new EndGame(toIntegerMap(message.get("playerIdToScore")));
-			} else if ("Set".equals(type)) {
+
+			case "Set":
 				return new Set((String) message.get("key"),
 						message.get("value"), message.get("visibleToPlayerIds"));
-			} else if ("SetRandomInteger".equals(type)) {
+
+			case "SetRandomInteger":
 				return new SetRandomInteger((String) message.get("key"),
 						(Integer) message.get("from"),
 						(Integer) message.get("to"));
-			} else if ("SetVisibility".equals(type)) {
+
+			case "SetVisibility":
 				return new SetVisibility((String) message.get("key"),
 						message.get("visibleToPlayerIds"));
-			} else if ("SetTurn".equals(type)) {
+
+			case "SetTurn":
 				return new SetTurn((Integer) message.get("playerId"),
 						(Integer) message.get("numberOfSecondsForTurn"));
-			} else if ("Delete".equals(type)) {
+
+			case "Delete":
 				return new Delete((String) message.get("key"));
-			} else if ("AttemptChangeTokens".equals(type)) {
+
+			case "AttemptChangeTokens":
 				return new AttemptChangeTokens(
 						toIntegerMap(message.get("playerIdToTokenChange")),
 						toIntegerMap(message
 								.get("playerIdToNumberOfTokensInPot")));
-			} else if ("Shuffle".equals(type)) {
+
+			case "Shuffle":
 				return new Shuffle((List<String>) message.get("keys"));
-			} else if ("GameReady".equals(type)) {
+
+			case "GameReady":
 				return new GameReady();
-			} else if ("MakeMove".equals(type)) {
+
+			case "MakeMove":
 				return new MakeMove(
 						messageToOperationList(message.get("operations")));
-			} else if ("VerifyMoveDone".equals(type)) {
+
+			case "VerifyMoveDone":
 				return new VerifyMoveDone(
 						(Integer) message.get("hackerPlayerId"),
 						(String) message.get("message"));
-			} else if ("RequestManipulator".equals(type)) {
+
+			case "RequestManipulator":
 				return new RequestManipulator();
-			} else if ("ManipulateState".equals(type)) {
+
+			case "ManipulateState":
 				return new ManipulateState(
 						(Map<String, Object>) message.get("state"));
-			} else if ("ManipulationDone".equals(type)) {
+
+			case "ManipulationDone":
 				return new ManipulationDone(
 						messageToOperationList(message.get("operations")));
-			} else {
+
+			default:
 				return null;
 			}
 
-			/*
-			 * switch (type) { case "UpdateUI": return new UpdateUI( (Integer)
-			 * message.get("yourPlayerId"), (List<Map<String, Object>>)
-			 * message.get("playersInfo"), (Map<String, Object>)
-			 * message.get("state"), (Map<String, Object>)
-			 * message.get("lastState"),
-			 * messageToOperationList(message.get("lastMove")), (Integer)
-			 * message.get("lastMovePlayerId"),
-			 * toIntegerMap(message.get("playerIdToNumberOfTokensInPot")));
-			 * 
-			 * case "VerifyMove": return new VerifyMove( (List<Map<String,
-			 * Object>>) message.get("playersInfo"), (Map<String, Object>)
-			 * message.get("state"), (Map<String, Object>)
-			 * message.get("lastState"),
-			 * messageToOperationList(message.get("lastMove")), (Integer)
-			 * message.get("lastMovePlayerId"),
-			 * toIntegerMap(message.get("playerIdToNumberOfTokensInPot")));
-			 * 
-			 * case "EndGame": return new
-			 * EndGame(toIntegerMap(message.get("playerIdToScore")));
-			 * 
-			 * case "Set": return new Set((String) message.get("key"),
-			 * message.get("value"), message.get("visibleToPlayerIds"));
-			 * 
-			 * case "SetRandomInteger": return new SetRandomInteger( (String)
-			 * message.get("key"), (Integer) message.get("from"), (Integer)
-			 * message.get("to"));
-			 * 
-			 * case "SetVisibility": return new SetVisibility( (String)
-			 * message.get("key"), message.get("visibleToPlayerIds"));
-			 * 
-			 * case "SetTurn": return new SetTurn((Integer)
-			 * message.get("playerId"), (Integer)
-			 * message.get("numberOfSecondsForTurn"));
-			 * 
-			 * case "Delete": return new Delete((String) message.get("key"));
-			 * 
-			 * case "AttemptChangeTokens": return new
-			 * AttemptChangeTokens(toIntegerMap
-			 * (message.get("playerIdToTokenChange")),
-			 * toIntegerMap(message.get("playerIdToNumberOfTokensInPot")));
-			 * 
-			 * case "Shuffle": return new Shuffle((List<String>)
-			 * message.get("keys"));
-			 * 
-			 * case "GameReady": return new GameReady();
-			 * 
-			 * case "MakeMove": return new
-			 * MakeMove(messageToOperationList(message.get("operations")));
-			 * 
-			 * case "VerifyMoveDone": return new VerifyMoveDone( (Integer)
-			 * message.get("hackerPlayerId"), (String) message.get("message"));
-			 * 
-			 * case "RequestManipulator": return new RequestManipulator();
-			 * 
-			 * case "ManipulateState": return new ManipulateState((Map<String,
-			 * Object>) message.get("state"));
-			 * 
-			 * case "ManipulationDone": return new
-			 * ManipulationDone(messageToOperationList
-			 * (message.get("operations")));
-			 * 
-			 * default: return null; }
-			 */
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	static Map<Integer, Integer> toIntegerMap(Object objMap) {
-		Map<Object, Object> map = (Map<Object, Object>) objMap;
-		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+		Map<?, ?> map = (Map<?, ?>) objMap;
+		Map<Integer, Integer> result = new HashMap<>();
 		for (Object key : map.keySet()) {
 			Object value = map.get(key);
 			result.put(
