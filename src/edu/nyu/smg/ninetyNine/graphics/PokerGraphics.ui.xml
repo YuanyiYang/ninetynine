@@ -14,6 +14,7 @@
     <g:HorizontalPanel height="100px">
       <g:HorizontalPanel width="120px" height="100px" ui:field="selectedArea"></g:HorizontalPanel>
       <g:Button ui:field="submitButton" text="Finish selecting card"></g:Button>
+      <g:Button ui:field="subtractButton" text="Next Move Sub"></g:Button>
     </g:HorizontalPanel>
     <g:HorizontalPanel height="100px" ui:field="points"></g:HorizontalPanel>
     <g:HorizontalPanel height="100px" ui:field="direction"></g:HorizontalPanel>
