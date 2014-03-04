@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -257,7 +257,7 @@ public final class GameApi {
     }
 
     public List<Integer> getPlayerIds() {
-      List<Integer> playerIds = new ArrayList<>();
+      List<Integer> playerIds = new ArrayList<Integer>();
       for (Map<String, Object> playerInfo : getPlayersInfo()) {
         playerIds.add((Integer) playerInfo.get(PLAYER_ID));
       }
@@ -362,7 +362,7 @@ public final class GameApi {
     }
 
     public EndGame(int winnerPlayerId) {
-      Map<Integer, Integer> strPlayerIdToScore = new HashMap<>();
+      Map<Integer, Integer> strPlayerIdToScore = new HashMap<Integer,Integer>();
       strPlayerIdToScore.put(winnerPlayerId, 1);
       this.playerIdToScore = ImmutableMap.copyOf(strPlayerIdToScore);
     }
@@ -775,8 +775,8 @@ public final class GameApi {
         return false;
       }
       Message other = (Message) obj;
-      return Objects.equals(other.getFieldsNameAndValue(), getFieldsNameAndValue())
-          && Objects.equals(other.getMessageName(), getMessageName());
+      return Objects.equal(other.getFieldsNameAndValue(), getFieldsNameAndValue())
+          && Objects.equal(other.getMessageName(), getMessageName());
     }
 
     @Override
@@ -788,7 +788,7 @@ public final class GameApi {
       if (values.isEmpty() || !(values.get(0) instanceof Message)) {
         return values;
       }
-      List<Object> messages = new ArrayList<>();
+      List<Object> messages = new ArrayList<Object>();
       for (Object operation : values) {
         messages.add(((Message) operation).toMessage());
       }
@@ -796,7 +796,7 @@ public final class GameApi {
     }
 
     public Map<String, Object> toMessage() {
-      Map<String, Object> message = new HashMap<>();
+      Map<String, Object> message = new HashMap<String, Object>();
       message.put("type", getMessageName());
       List<Object> fieldsNameAndValue = getFieldsNameAndValue();
       for (int i = 0; i < fieldsNameAndValue.size() / 2; i++) {
@@ -815,7 +815,7 @@ public final class GameApi {
     @SuppressWarnings("unchecked")
     private static List<Operation> messageToOperationList(Object operationMessagesObj) {
       List<?> operationMessages = (List<?>) operationMessagesObj;
-      List<Operation> operations = new ArrayList<>();
+      List<Operation> operations = new ArrayList<Operation>();
       for (Object operationMessage : operationMessages) {
         operations.add((Operation) messageToHasEquality((Map<String, Object>) operationMessage));
       }
@@ -825,6 +825,8 @@ public final class GameApi {
     @SuppressWarnings("unchecked")
     public static Message messageToHasEquality(Map<String, Object> message) {
       String type = (String) message.get("type");
+//    	Message type = (Message)message.get("type");
+    	
       switch (type) {
         case "UpdateUI":
           return new UpdateUI(
@@ -898,15 +900,16 @@ public final class GameApi {
         case "ManipulationDone":
           return new ManipulationDone(messageToOperationList(message.get("operations")));
 
-        default:
+       default:
           return null;
       }
     }
   }
-
-  static Map<Integer, Integer> toIntegerMap(Object objMap) {
-    Map<?, ?> map = (Map<?, ?>) objMap;
-    Map<Integer, Integer> result = new HashMap<>();
+  
+  @SuppressWarnings("unchecked")
+  static Map<Integer, Integer> toIntegerMap(Object objMap) { 
+	Map<Object, Object> map = (Map<Object, Object>) objMap;
+    Map<Integer, Integer> result = new HashMap<Integer,Integer>();
     for (Object key : map.keySet()) {
       Object value = map.get(key);
       result.put(key instanceof Integer ? (Integer) key : Integer.parseInt(key.toString()),

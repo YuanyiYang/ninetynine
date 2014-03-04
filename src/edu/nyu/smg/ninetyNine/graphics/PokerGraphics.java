@@ -3,13 +3,12 @@ package edu.nyu.smg.ninetyNine.graphics;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.concurrent.Immutable;
-
 import edu.nyu.smg.ninetyNine.client.Card;
 import edu.nyu.smg.ninetyNine.client.PokerPresenter;
 import edu.nyu.smg.ninetyNine.client.PokerPresenter.PokerMessage;
+import edu.nyu.smg.ninetyNine.client.DirectionsOfTurn;
 
-import com.google.appengine.labs.repackaged.com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,6 +21,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PokerGraphics extends Composite implements PokerPresenter.View {
@@ -109,6 +109,20 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		}
 	}
 	
+	private String directionString(boolean isClockwise){
+		if(isClockwise){
+			return DirectionsOfTurn.Clockwise.toString();
+		}else{
+			return DirectionsOfTurn.AntiClockwise.toString();
+		}
+	}
+	
+	private void placeString(HorizontalPanel hPanel, String str){
+		hPanel.clear();
+		Label label = new Label(str);
+		hPanel.add(label);
+	}
+	
 	private void disableSubmitClicks(){
 		submitButton.setEnabled(false);
 		enableClicks = false;
@@ -116,6 +130,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	
 	private void alertPokerMessage(PokerMessage pokerMessage){
 		String message = "";
+		List<String> options = Lists.newArrayList();
 		switch (pokerMessage) {
 		case NEXT_MOVE_SUB:
 			message += "The player's next move is to substract points!";
@@ -127,6 +142,20 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		default:
 			break;
 		}
+		if(message.isEmpty()){
+			return;
+		}
+		if(options.isEmpty()){
+			options.add("OK");
+		}
+		new PopupChoices(message, options, new PopupChoices.OptionChosen(){
+
+			@Override
+			public void optionChosen(String option) {
+				// TODO Auto-generated method stub
+				
+			}
+		}).center();
 	}
 	
 	
@@ -146,7 +175,14 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			int numberOfCardsInUsedPile, int numberOfCardsInUnusedPile,
 			int point, boolean isClockwise, PokerMessage pokerMessage) {
 		// TODO Auto-generated method stub
-		
+		placeImages(playerArea, createBackCards(numberOfWhiteCards));
+		placeImages(selectedArea, ImmutableList.<Image>of());
+		placeImages(opponentArea, createBackCards(numberOfBlackCards));
+		placeImages(usedArea, createBackCards(numberOfCardsInUsedPile));
+		placeImages(unUsedArea, createBackCards(numberOfCardsInUnusedPile));
+		placeString(points, point+"");
+		placeString(direction, directionString(isClockwise));
+		alertPokerMessage(pokerMessage);
 	}
 
 	@Override
@@ -160,9 +196,9 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		placeImages(opponentArea, createBackCards(numberOfOpponentCards));
 		placeImages(usedArea, createBackCards(numberOfCardsInUsedPile));
 		placeImages(unUsedArea, createBackCards(numberOfCardsInUnusedPile));
-		/*
-		 * put point/direction/message??
-		 */
+		placeString(points, point+"");
+		placeString(direction, directionString(isClockwise));
+		alertPokerMessage(pokerMessage);
 	}
 
 	@Override
