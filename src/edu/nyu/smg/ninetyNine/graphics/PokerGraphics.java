@@ -154,7 +154,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	
 	@UiHandler("submitButton")
 	void onClickSubmitButton(ClickEvent e){
-		subtractButton.setEnabled(true);
+		subtractButton.setEnabled(false); //change here to fix bug 
 		disableSubmitClicks();
 		pokerPresenter.finishedSelectingCards();
 	}
