@@ -38,7 +38,7 @@ public enum Rank {
 	}
 
 	/*
-	 * Map ACE to 1, TWO to 2, THREE to 3.....TEN to 10, JACK to J, QUEEN to Q,
+	 * Map ACE to 1, TWO to 2, THREE to 3.....TEN to T, JACK to J, QUEEN to Q,
 	 * KING to K
 	 */
 	public String getFirstLetter() {

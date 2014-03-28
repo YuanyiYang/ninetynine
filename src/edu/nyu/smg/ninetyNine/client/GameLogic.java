@@ -11,15 +11,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import edu.nyu.smg.ninetyNine.client.GameApi.Delete;
-import edu.nyu.smg.ninetyNine.client.GameApi.EndGame;
-import edu.nyu.smg.ninetyNine.client.GameApi.Operation;
-import edu.nyu.smg.ninetyNine.client.GameApi.Set;
-import edu.nyu.smg.ninetyNine.client.GameApi.SetTurn;
-import edu.nyu.smg.ninetyNine.client.GameApi.SetVisibility;
-import edu.nyu.smg.ninetyNine.client.GameApi.Shuffle;
-import edu.nyu.smg.ninetyNine.client.GameApi.VerifyMove;
-import edu.nyu.smg.ninetyNine.client.GameApi.VerifyMoveDone;
+import org.game_api.GameApi;
+import org.game_api.GameApi.*;
 
 public class GameLogic {
 
@@ -61,16 +54,8 @@ public class GameLogic {
 	void checkMoveIsLegal(VerifyMove verifyMove) {
 		List<Operation> lastMove = verifyMove.getLastMove();
 		Map<String, Object> lastState = verifyMove.getLastState();
-		// Map<String, Object> currentState = verifyMove.getState();
 		List<Operation> expectedOperations = getExpectedOperations(verifyMove);
-		// List<Operation> expectedOperations = getExpectedOperations(lastState,
-		// currentState, lastMove, verifyMove.getPlayerIds(),
-		// verifyMove.getLastMovePlayerId());
 		check(expectedOperations.equals(lastMove), expectedOperations, lastMove);
-		// We use SetTurn, so we don't need to check that the correct player did
-		// the move. However, we do need to check the first move is done by the
-		// white player (and then in the first MakeMove we'll send SetTurn which
-		// will guarantee the correct player send MakeMove).
 		if (lastState.isEmpty()) {
 			check(verifyMove.getLastMovePlayerId() == verifyMove.getPlayerIds()
 					.get(0));
@@ -90,8 +75,8 @@ public class GameLogic {
 		List<Operation> lastMove = verifyMove.getLastMove();
 		Map<String, Object> lastApiState = verifyMove.getLastState();
 		Map<String, Object> currentApiState = verifyMove.getState();
-		List<Integer> playerIds = verifyMove.getPlayerIds();
-		int lastMovePlayerId = verifyMove.getLastMovePlayerId();
+		List<String> playerIds = verifyMove.getPlayerIds();
+		String lastMovePlayerId = verifyMove.getLastMovePlayerId();
 		if (lastApiState.isEmpty()) {
 			return getInitialMove(playerIds);
 		}
@@ -133,7 +118,7 @@ public class GameLogic {
 	}
 
 	List<Operation> getNextMoveSub(ColorOfPlayer lastTurnPlayer,
-			List<Integer> playerIds) {
+			List<String> playerIds) {
 		return ImmutableList.<Operation> of(
 				new SetTurn(playerIds.get(lastTurnPlayer.ordinal())), new Set(
 						IS_SUB, YES));
@@ -147,7 +132,7 @@ public class GameLogic {
 	 * SetVisibility(unused)
 	 */
 	List<Operation> getNewRoundOperations(PokerState pokerState,
-			ColorOfPlayer lastTurnPlayer, List<Integer> playerIds) {
+			ColorOfPlayer lastTurnPlayer, List<String> playerIds) {
 		List<Integer> lastUsed = pokerState.getUsed();
 		List<Integer> newUsed = ImmutableList.<Integer> of();
 		List<Integer> newUnUsed = lastUsed;
@@ -162,7 +147,7 @@ public class GameLogic {
 		operations.add(new Shuffle(unusedNewCards));
 		for (Integer newCardIndex : newUnUsed) {
 			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of()));
+					.<String> of()));
 		}
 		return ImmutableList.<Operation> copyOf(operations);
 	}
@@ -196,7 +181,7 @@ public class GameLogic {
 	 * @return desired list of operations
 	 */
 	public List<Operation> getExpectedOperations(List<Integer> cardList,
-			PokerState pokerState, List<Integer> playerIds, Card card) {
+			PokerState pokerState, List<String> playerIds, Card card) {
 		ColorOfPlayer lastTurnColor = pokerState.getTurn();
 		if (pokerState.getUnused().isEmpty()) {
 			return getNewRoundOperations(pokerState, lastTurnColor, playerIds);
@@ -279,7 +264,7 @@ public class GameLogic {
 	 * @return the desired operations
 	 */
 	List<Operation> playANormalCard(PokerState pokerState,
-			List<Integer> cardList, int cardValue, List<Integer> playerIds) {
+			List<Integer> cardList, int cardValue, List<String> playerIds) {
 		check(!pokerState.isGameOver());
 		check(!pokerState.isSub());
 		ColorOfPlayer turnOfColor = pokerState.getTurn();
@@ -326,7 +311,7 @@ public class GameLogic {
 		operations.add(new SetVisibility(C + cardList.get(0)));
 		operations.add(new SetVisibility(
 				C + newCardAddedToCurrentPlayer.get(0), ImmutableList
-						.<Integer> of(playerIds.get(turnOfColor.ordinal()))));
+						.<String> of(playerIds.get(turnOfColor.ordinal()))));
 		if (newPoint > 99) {
 			operations.add(new Set(IS_GAMEOVER, YES));
 			operations.add(new GameApi.EndGame(playerIds.get(turnOfColor
@@ -348,7 +333,7 @@ public class GameLogic {
 	 * @return desired operations
 	 */
 	List<Operation> playAReverseCard(PokerState pokerState,
-			List<Integer> cardList, List<Integer> playerIds) {
+			List<Integer> cardList, List<String> playerIds) {
 		// make sure that the default value of isSub() is false
 		check(!pokerState.isGameOver());
 		check(!pokerState.isSub());
@@ -386,7 +371,7 @@ public class GameLogic {
 				.add(new Set(UNUSED, newUnUsedPile))
 				.add(new SetVisibility(C + cardList.get(0)))
 				.add(new SetVisibility(C + newCardAddedToPlayer.get(0),
-						ImmutableList.<Integer> of(playerIds.get(turnOfColor
+						ImmutableList.<String> of(playerIds.get(turnOfColor
 								.ordinal()))))
 				.add(new Set(DIRECTION, newDirection.name())).build();
 		return desiredOperations;
@@ -405,7 +390,7 @@ public class GameLogic {
 	 * @return desired operations
 	 */
 	List<Operation> playAExchangeCard(PokerState pokerState,
-			List<Integer> cardList, List<Integer> playerIds) {
+			List<Integer> cardList, List<String> playerIds) {
 		check(!pokerState.isGameOver());
 		check(!pokerState.isSub());
 		ColorOfPlayer turnOfColor = pokerState.getTurn();
@@ -434,11 +419,11 @@ public class GameLogic {
 		operations.add(new Set(USED, newUsedPile));
 		for (Integer newCardIndex : newHandOfCurrentPlayer) {
 			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of(playerIds.get(turnOfColor.ordinal()))));
+					.<String> of(playerIds.get(turnOfColor.ordinal()))));
 		}
 		for (Integer newCardIndex : newHandOfOpponent) {
 			operations.add(new SetVisibility(C + newCardIndex, ImmutableList
-					.<Integer> of(playerIds.get(turnOfColor.getOppositeColor()
+					.<String> of(playerIds.get(turnOfColor.getOppositeColor()
 							.ordinal()))));
 		}
 		operations.add(new SetVisibility(C + cardList.get(0)));
@@ -450,7 +435,7 @@ public class GameLogic {
 	 * false. This operation would not lead to an end of the game.
 	 */
 	List<Operation> playAMinusCard(PokerState pokerState,
-			List<Integer> cardList, int cardValue, List<Integer> playerIds) {
+			List<Integer> cardList, int cardValue, List<String> playerIds) {
 		check(!pokerState.isGameOver());
 		check(pokerState.isSub());
 		ColorOfPlayer turnOfColor = pokerState.getTurn();
@@ -488,7 +473,7 @@ public class GameLogic {
 		operations.add(new SetVisibility(C + cardList.get(0)));
 		operations.add(new SetVisibility(
 				C + newCardAddedToCurrentPlayer.get(0), ImmutableList
-						.<Integer> of(playerIds.get(turnOfColor.ordinal()))));
+						.<String> of(playerIds.get(turnOfColor.ordinal()))));
 		operations.add(new Delete(IS_SUB));
 		return ImmutableList.<Operation> copyOf(operations);
 	}
@@ -500,7 +485,7 @@ public class GameLogic {
 	 * interaction with UI and it may require a further move.
 	 */
 	List<Operation> playADrawOtherCard(PokerState pokerState,
-			List<Integer> cardList, List<Integer> playerIds) {
+			List<Integer> cardList, List<String> playerIds) {
 		/*
 		 * In this move, it may lead to an end of the game. If the player drawa
 		 * a card from the opponent which is the last card of the opponent, this
@@ -540,7 +525,7 @@ public class GameLogic {
 		operations.add(new SetVisibility(C + cardList.get(0)));
 		operations
 				.add(new SetVisibility(C + cardFromOpponent.get(0),
-						ImmutableList.<Integer> of(playerIds.get(turnOfColor
+						ImmutableList.<String> of(playerIds.get(turnOfColor
 								.ordinal()))));
 		operations.add(new Shuffle(newCardsInCurrentPlayer));
 		if (newHandOfOpponent.isEmpty()) {
@@ -551,13 +536,13 @@ public class GameLogic {
 	}
 
 	List<Operation> playAddedToMaxCard(PokerState pokerState,
-			List<Integer> cardList, List<Integer> playerIds) {
+			List<Integer> cardList, List<String> playerIds) {
 		return playANormalCard(pokerState, cardList, 99, playerIds);
 	}
 
-	List<Operation> getInitialMove(List<Integer> playerIds) {
-		int whitePlayerId = playerIds.get(0);
-		int blackPlayerId = playerIds.get(1);
+	List<Operation> getInitialMove(List<String> playerIds) {
+		String whitePlayerId = playerIds.get(0);
+		String blackPlayerId = playerIds.get(1);
 		List<Operation> operations = Lists.newArrayList();
 		// The order of operations: turn, W, B, Used, UnUsed , C0...C51, Points,
 		// direction, isSub, isGameOver
@@ -584,7 +569,7 @@ public class GameLogic {
 		}
 		for (int i = 10; i < 52; i++) {
 			operations.add(new SetVisibility(C + i, ImmutableList
-					.<Integer> of())); // to question
+					.<String> of())); // to question
 		}
 		operations.add(new Set(P, 0));
 		operations.add(new Set(DIRECTION, CLOCKWISE));
@@ -596,7 +581,7 @@ public class GameLogic {
 
 	@SuppressWarnings("unchecked")
 	PokerState gameApiStateToPokerState(Map<String, Object> gameApiState,
-			ColorOfPlayer turnOfPlayer, List<Integer> playerIds) {
+			ColorOfPlayer turnOfPlayer, List<String> playerIds) {
 		List<Optional<Card>> cards = Lists.newArrayList();
 		for (int i = 0; i < 52; i++) {
 			// Here we get the string: the actual value of the card ie 1c, ...,

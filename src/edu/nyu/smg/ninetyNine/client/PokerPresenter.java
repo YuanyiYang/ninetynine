@@ -8,7 +8,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import edu.nyu.smg.ninetyNine.client.GameApi.*;
+import org.game_api.GameApi.*;
 
 /**
  * The presenter that controls the poker99 graphics. We use the MVP pattern: the
@@ -92,7 +92,7 @@ public class PokerPresenter {
 	 * The state don't contain info about which player has the turn. Since every
 	 * move contains the SetTurn() operation, we can get the turn via lastMove.
 	 */
-	private List<Integer> playerIds = null;
+	private List<String> playerIds = null;
 	private ColorOfPlayer thisTurnColor = null;
 	private PokerState pokerState = null;
 	private List<Card> selectedCards = null;
@@ -107,7 +107,7 @@ public class PokerPresenter {
 	/** Updates the presenter and the view with the state in updateUI. */
 	public void updateUI(UpdateUI updateUI) {
 		playerIds = updateUI.getPlayerIds();
-		int yourPlayerId = updateUI.getYourPlayerId();
+		String yourPlayerId = updateUI.getYourPlayerId();
 		int yourPlayerIndex = updateUI.getPlayerIndex(yourPlayerId);
 		myColor = yourPlayerIndex == 0 ? Optional.of(ColorOfPlayer.W)
 				: yourPlayerIndex == 1 ? Optional.of(ColorOfPlayer.B)
@@ -134,7 +134,7 @@ public class PokerPresenter {
 		List<Operation> lastMove = updateUI.getLastMove();
 		for (Operation operation : lastMove) {
 			if (operation instanceof SetTurn) {
-				int thisTurnPlayerId = ((SetTurn) operation).getPlayerId();
+				String thisTurnPlayerId = ((SetTurn) operation).getPlayerId();
 				thisTurnColor = ColorOfPlayer.values()[playerIds
 						.indexOf(thisTurnPlayerId)];
 			}
@@ -295,8 +295,8 @@ public class PokerPresenter {
 		return usedCards;
 	}
 
-	private void sendInitialMove(List<Integer> playersId) {
-		container.sendMakeMove(gameLogic.getInitialMove(playersId));
+	private void sendInitialMove(List<String> playerIds2) {
+		container.sendMakeMove(gameLogic.getInitialMove(playerIds2));
 	}
 
 	private PokerMessage getPokerMessage() {

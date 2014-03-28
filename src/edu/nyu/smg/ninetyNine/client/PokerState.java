@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Representation of the cheat game state. The game state uses these keys: turn,
+ * Representation of the poker game state. The game state uses these keys: turn,
  * W, B, Used, UnUsed, C0...C51, Point, direction ,isSub and isGameOver which
  * are mapped to these fields: turn, white, black, usedPile, unUsedPile, cards,
  * points, direction of the game, whether this card will add up to the points or
@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 
 public class PokerState {
 	private final ColorOfPlayer turn;
-	private final ImmutableList<Integer> playerIds;
+	private final ImmutableList<String> playerIds;
 	/**
 	 * Note that some of the entries will have null, meaning the card is not
 	 * visible to us.
@@ -35,7 +35,7 @@ public class PokerState {
 	private final boolean isGameOver;
 
 	public PokerState(ColorOfPlayer turn, ImmutableList<Optional<Card>> cards,
-			ImmutableList<Integer> playerIds, ImmutableList<Integer> white,
+			ImmutableList<String> playerIds, ImmutableList<Integer> white,
 			ImmutableList<Integer> black, ImmutableList<Integer> used,
 			ImmutableList<Integer> unused, boolean isSub, Integer points,
 			DirectionsOfTurn direction, boolean isGameOver) {
@@ -92,14 +92,21 @@ public class PokerState {
 		return points;
 	}
 
-	public ImmutableList<Integer> getPlayerIds() {
+	public ImmutableList<String> getPlayerIds() {
 		return playerIds;
 	}
 
-	public int getPlayerId(ColorOfPlayer color) {
+	public String getPlayerId(ColorOfPlayer color) {
 		return playerIds.get(color.ordinal());
 	}
 
+	/**
+	 * This method returns a list of integer which represents the cards in the
+	 * parameter player's hand.
+	 * 
+	 * @param color 
+	 * @return
+	 */
 	public ImmutableList<Integer> getWhiteOrBlack(ColorOfPlayer color) {
 		return color.isWhite() ? white : black;
 	}

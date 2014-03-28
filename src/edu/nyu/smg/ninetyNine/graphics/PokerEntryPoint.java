@@ -1,9 +1,6 @@
 package edu.nyu.smg.ninetyNine.graphics;
-import edu.nyu.smg.ninetyNine.client.GameApi;
-import edu.nyu.smg.ninetyNine.client.GameApi.Game;
-import edu.nyu.smg.ninetyNine.client.GameApi.IteratingPlayerContainer;
-import edu.nyu.smg.ninetyNine.client.GameApi.UpdateUI;
-import edu.nyu.smg.ninetyNine.client.GameApi.VerifyMove;
+import org.game_api.GameApi;
+import org.game_api.GameApi.*;
 import edu.nyu.smg.ninetyNine.client.GameLogic;
 import edu.nyu.smg.ninetyNine.client.PokerPresenter;
 
@@ -19,7 +16,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class PokerEntryPoint implements EntryPoint{
 	
-	IteratingPlayerContainer container;
+	ContainerConnector container;
 	PokerPresenter pokerPresenter;
 	
 
@@ -37,29 +34,29 @@ public class PokerEntryPoint implements EntryPoint{
 				pokerPresenter.updateUI(updateUI);
 			}
 		};		
-		container = new IteratingPlayerContainer(game, 2);
+		container = new ContainerConnector(game);
 		PokerGraphics pokerGraphics = new PokerGraphics();
 		pokerPresenter = new PokerPresenter(container, pokerGraphics);
-		final ListBox playerSelect = new ListBox();
-		playerSelect.addItem("WhitePlayer");
-		playerSelect.addItem("BlackPlayer");
-		playerSelect.addItem("Viewer");
-		playerSelect.addChangeHandler(new ChangeHandler() {
-			
-			@Override
-			public void onChange(ChangeEvent event) {
-				int selectedIndex = playerSelect.getSelectedIndex();
-				int playerId = selectedIndex == 2 ? GameApi.VIEWER_ID
-			            : container.getPlayerIds().get(selectedIndex);
-			        container.updateUi(playerId);
-			}
-		});
+//		final ListBox playerSelect = new ListBox();
+//		playerSelect.addItem("WhitePlayer");
+//		playerSelect.addItem("BlackPlayer");
+//		playerSelect.addItem("Viewer");
+//		playerSelect.addChangeHandler(new ChangeHandler() {
+//			
+//			@Override
+//			public void onChange(ChangeEvent event) {
+//				int selectedIndex = playerSelect.getSelectedIndex();
+//				String playerId = selectedIndex == 2 ? GameApi.VIEWER_ID
+//			            : container.getPlayerIds().get(selectedIndex);
+//			        container.updateUi(playerId);
+//			}
+//		});
 		FlowPanel flowPanel = new FlowPanel();
 		flowPanel.add(pokerGraphics);
-		flowPanel.add(playerSelect);
+//		flowPanel.add(playerSelect);
 		RootPanel.get("mainDiv").add(flowPanel);
 		container.sendGameReady();
-		container.updateUi(container.getPlayerIds().get(0));
+//		container.updateUi(container.getPlayerIds().get(0));
 	}
 
 }
