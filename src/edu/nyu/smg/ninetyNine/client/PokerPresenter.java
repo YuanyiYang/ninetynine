@@ -78,6 +78,18 @@ public class PokerPresenter {
 		 * selected, the next move will be playing a minus wild card.
 		 */
 		void chooseNextMoveSub(boolean isSub);
+		
+		/**
+		 * Presenter will call this method to inform the view to enable the subButton 
+		 * @param fromPersenterSub true to enable the button
+		 */
+		void presenterSetSub(boolean fromPersenterSub);
+		
+		/**
+		 * To disable the submit and subtract button. should be called when a player makes his move
+		 * or after the initial moves.
+		 */
+		void disableAllButton();
 	}
 
 	/*
@@ -122,6 +134,7 @@ public class PokerPresenter {
 			if (myColor.isPresent() && myColor.get().isWhite()) {
 				sendInitialMove(playerIds);
 			}
+			pokerView.disableAllButton();
 			return;
 		}
 		/*
@@ -180,22 +193,14 @@ public class PokerPresenter {
 				unusedPile.size(), getMyCards(), pokerState.getPoints(),
 				isClockWise(), getPokerMessage());
 		if (isMyTurn()) {
-			// it's your move
 			/*
-			 * In your move, you might want to choose a card to play or want to
-			 * set the IS_SUB field to be true. Here I suppose that in this
-			 * updateUI method, the player's next move is to play a card. When
-			 * it comes to the set IS_SUB operation, the player will call a
-			 * method on the view and the view will call corresponding method in
-			 * the presenter. The method in the presented will call the
-			 * container to generate the operations.
+			 * Here we enable the 
 			 */
-
+			pokerView.presenterSetSub(true);
 			if (opponentCards.size() > 0 && !pokerState.isGameOver()) {
 				chooseNextCard();
 			}
 		}
-
 	}
 
 	/**

@@ -427,6 +427,10 @@ public class GameLogic {
 							.ordinal()))));
 		}
 		operations.add(new SetVisibility(C + cardList.get(0)));
+		if (newHandOfOpponent.isEmpty()) {
+			operations.add(new Set(IS_GAMEOVER, YES));
+			operations.add(new EndGame(playerIds.get(turnOfColor.ordinal())));
+		}
 		return ImmutableList.<Operation> copyOf(operations);
 	}
 
