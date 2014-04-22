@@ -68,12 +68,12 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	Button subtractButton;
 	@UiField
 	HorizontalPanel mesg;
-	@UiField
-	AbsolutePanel dndArea;
-	@UiField
-	Label dragMe;
-	@UiField
-	Label dragOntoMe;
+//	@UiField
+//	AbsolutePanel dndArea;
+//	@UiField
+//	Label dragMe;
+//	@UiField
+//	Label dragOntoMe;
 
 	private boolean enableClicks = false;
 	private final CardImageSupplier cardImageSupplier;
@@ -82,8 +82,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	private Timer myTimer;
 	private Audio cardSelected;
 	private Audio cardDown; // haven't used it in any where
-	private PickupDragController dragController;
-	private SimpleDropController dropController;
+//	private PickupDragController dragController;
+//	private SimpleDropController dropController;
 	
 
 	public PokerGraphics() {
@@ -98,36 +98,36 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			cardDown.addSource(gameSounds.cardDownMp3().getSafeUri().asString(), AudioElement.TYPE_MP3);
 			cardDown.addSource(gameSounds.cardDownWav().getSafeUri().asString(), AudioElement.TYPE_WAV);
 		}
-		dndArea.setPixelSize(300, 300);
-		dndArea.setStyleName("dnd-started-blue");
-		dragOntoMe.setStyleName("dnd-default");
-		dragController = new PickupDragController(dndArea, true);
-		dragController.setBehaviorConstrainedToBoundaryPanel(true);
-		dragController.setBehaviorMultipleSelection(true);
-		dropController = new SimpleDropController(dragOntoMe){
-			@Override
-			public void onDrop(DragContext context){
-				super.onDrop(context);
-				dragOntoMe.setStyleName("dnd-after-drop");
-				dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
-			}
-			
-			@Override
-			public void onEnter(DragContext context){
-				super.onEnter(context);
-				dragOntoMe.setStyleName("dnd-enter");
-				dragOntoMe.getElement().getStyle().setFontSize(5, Unit.EM);
-			}
-			
-			@Override
-			public void onLeave(DragContext context){
-				super.onEnter(context);
-				dragOntoMe.setStyleName("dnd-default");	
-				dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
-			}
-		};
-		dragController.registerDropController(dropController);
-		dragController.makeDraggable(dragMe);
+//		dndArea.setPixelSize(300, 300);
+//		dndArea.setStyleName("dnd-started-blue");
+//		dragOntoMe.setStyleName("dnd-default");
+//		dragController = new PickupDragController(dndArea, true);
+//		dragController.setBehaviorConstrainedToBoundaryPanel(true);
+//		dragController.setBehaviorMultipleSelection(true);
+//		dropController = new SimpleDropController(dragOntoMe){
+//			@Override
+//			public void onDrop(DragContext context){
+//				super.onDrop(context);
+//				dragOntoMe.setStyleName("dnd-after-drop");
+//				dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
+//			}
+//			
+//			@Override
+//			public void onEnter(DragContext context){
+//				super.onEnter(context);
+//				dragOntoMe.setStyleName("dnd-enter");
+//				dragOntoMe.getElement().getStyle().setFontSize(5, Unit.EM);
+//			}
+//			
+//			@Override
+//			public void onLeave(DragContext context){
+//				super.onEnter(context);
+//				dragOntoMe.setStyleName("dnd-default");	
+//				dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
+//			}
+//		};
+//		dragController.registerDropController(dropController);
+//		dragController.makeDraggable(dragMe);
 	}
 
 	private List<Image> createBackCards(int numOfCards) {
@@ -188,26 +188,9 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			final CardImage imgFinal = img;
 			final Image image = new Image(cardImageSupplier.getResource(img));
 			if (withClick) {
-				// image.addDoubleClickHandler(new DoubleClickHandler() {
-				// @Override
-				// public void onDoubleClick(DoubleClickEvent event) {
-				// if (enableClicks) {
-				// pokerPresenter.cardSelected(imgFinal.card);
-				// }
-				// }
-				//
-				// });
+				
 				image.addClickHandler(new myClickHandler(image, imgFinal)
-				// new ClickHandler() {
-				//
-				// @Override
-				// public void onClick(ClickEvent event) {
-				// if (enableClicks) {
-				// fadeAnimation = new CardFadeAnimation(image);
-				// fadeAnimation.fade(2000, 1.0);
-				// }
-				// }
-				// }
+				
 				);
 			}
 			result.add(image);

@@ -17,10 +17,10 @@
 			<g:HorizontalPanel height="100px" width="100px" ui:field="direction"></g:HorizontalPanel>
 			<g:HorizontalPanel height="100px" width="100px" ui:field="mesg"></g:HorizontalPanel>
 		</g:HorizontalPanel>
-		<g:AbsolutePanel ui:field="dndArea">
+	<!-- 	<g:AbsolutePanel ui:field="dndArea">
 		  
       <g:Label ui:field="dragMe">Drag Me</g:Label>
       <g:Label ui:field="dragOntoMe">Drag Onto Me</g:Label>
-    </g:AbsolutePanel>
+    </g:AbsolutePanel> -->
 	</g:VerticalPanel>
 </ui:UiBinder> 
