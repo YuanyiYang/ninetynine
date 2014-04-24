@@ -189,9 +189,18 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			final Image image = new Image(cardImageSupplier.getResource(img));
 			if (withClick) {
 				
-				image.addClickHandler(new myClickHandler(image, imgFinal)
-				
-				);
+//				image.addClickHandler(new myClickHandler(image, imgFinal)
+//				
+//				);
+				image.addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						if(enableClicks){
+							pokerPresenter.cardSelected(imgFinal.card);
+						}				
+					}
+				});
 			}
 			result.add(image);
 		}
