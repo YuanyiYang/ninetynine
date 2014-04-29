@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.media.client.Audio;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -75,6 +76,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 //	@UiField
 //	Label dragOntoMe;
 
+	
 	private boolean enableClicks = false;
 	private final CardImageSupplier cardImageSupplier;
 	private PokerPresenter pokerPresenter;
@@ -84,9 +86,11 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	private Audio cardDown; // haven't used it in any where
 //	private PickupDragController dragController;
 //	private SimpleDropController dropController;
+	private GameConstants gameConstants;
 	
 
 	public PokerGraphics() {
+		gameConstants = (GameConstants)GWT.create(GameConstants.class);
 		CardImages cardImages = GWT.create(CardImages.class);
 		this.cardImageSupplier = new CardImageSupplier(cardImages);
 		initWidget(uiBinder.createAndBindUi(this));
@@ -98,6 +102,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			cardDown.addSource(gameSounds.cardDownMp3().getSafeUri().asString(), AudioElement.TYPE_MP3);
 			cardDown.addSource(gameSounds.cardDownWav().getSafeUri().asString(), AudioElement.TYPE_WAV);
 		}
+		submitButton.setText(gameConstants.submitButton());
+		subtractButton.setText(gameConstants.subMoveButton());
 //		dndArea.setPixelSize(300, 300);
 //		dndArea.setStyleName("dnd-started-blue");
 //		dragOntoMe.setStyleName("dnd-default");
@@ -221,9 +227,11 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 
 	private String directionString(boolean isClockwise) {
 		if (isClockwise) {
-			return DirectionsOfTurn.Clockwise.toString();
+			return gameConstants.clockwise();
+			//return DirectionsOfTurn.Clockwise.toString();
 		} else {
-			return DirectionsOfTurn.AntiClockwise.toString();
+			//return DirectionsOfTurn.AntiClockwise.toString();
+			return gameConstants.antiClockwise();
 		}
 	}
 
