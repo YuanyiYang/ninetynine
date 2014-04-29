@@ -11,4 +11,8 @@ public interface GameConstants extends Constants{
 	String submitButton();
 	
 	String subMoveButton();
+	
+	String hasWinner();
+	
+	String nextMoveSub();
 }

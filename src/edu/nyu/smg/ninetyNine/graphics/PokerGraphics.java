@@ -257,10 +257,10 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		String message = "";
 		switch (pokerMessage) {
 		case NEXT_MOVE_SUB:
-			message += "The player's next move is to substract points!";
+			message += gameConstants.nextMoveSub();
 			break;
 		case HAS_WINNER:
-			message += "We have a winner!";
+			message += gameConstants.hasWinner();
 		case INVISIBLE:
 			break;
 		default:
