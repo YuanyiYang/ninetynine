@@ -100,6 +100,7 @@ public class PokerPresenter {
 	private GameLogic gameLogic;
 	private Container container;
 	private Optional<ColorOfPlayer> myColor;
+	private AIMove aiMove;
 	/*
 	 * The state don't contain info about which player has the turn. Since every
 	 * move contains the SetTurn() operation, we can get the turn via lastMove.
@@ -171,8 +172,9 @@ public class PokerPresenter {
 		selectedCards = Lists.newArrayList();
 
 		if (updateUI.isAiPlayer()) {
-			// container.sendMakeMove(..);
-			return;
+			aiMove = new AIMove(pokerState);
+			container.sendMakeMove(gameLogic.getExpectedOperations(
+					aiMove.getBestMove(), pokerState, playerIds, null));
 		}
 		if (updateUI.isViewer()) {
 			pokerView.setViewerState(pokerState.getWhite().size(), pokerState
@@ -193,9 +195,6 @@ public class PokerPresenter {
 				unusedPile.size(), getMyCards(), pokerState.getPoints(),
 				isClockWise(), getPokerMessage());
 		if (isMyTurn()) {
-			/*
-			 * Here we enable the 
-			 */
 			pokerView.presenterSetSub(true);
 			if (opponentCards.size() > 0 && !pokerState.isGameOver()) {
 				chooseNextCard();

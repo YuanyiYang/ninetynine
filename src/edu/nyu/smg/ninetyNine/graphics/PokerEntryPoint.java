@@ -26,8 +26,8 @@ import edu.nyu.smg.ninetyNine.client.PokerPresenter;
  */
 public class PokerEntryPoint implements EntryPoint{
 	
-//	ContainerConnector container;
-	IteratingPlayerContainer container;
+	ContainerConnector container;
+//	IteratingPlayerContainer container;
 	PokerPresenter pokerPresenter;
 	
 	@SuppressWarnings("deprecation")
@@ -79,33 +79,33 @@ public class PokerEntryPoint implements EntryPoint{
 			}
 		};	
 		
-//		container = new ContainerConnector(game);
-		container = new IteratingPlayerContainer(game, 2);
+		container = new ContainerConnector(game);
+//		container = new IteratingPlayerContainer(game, 2);
 		PokerGraphics pokerGraphics = new PokerGraphics();
 		pokerPresenter = new PokerPresenter(container, pokerGraphics);
 			
-		final ListBox playerSelect = new ListBox();
-		playerSelect.addItem("WhitePlayer");
-		playerSelect.addItem("BlackPlayer");
-		playerSelect.addItem("Viewer");
-		playerSelect.addChangeHandler(new ChangeHandler() {
-			
-			@Override
-			public void onChange(ChangeEvent event) {
-				int selectedIndex = playerSelect.getSelectedIndex();
-				String playerId = selectedIndex == 2 ? GameApi.VIEWER_ID
-			            : container.getPlayerIds().get(selectedIndex);
-			        container.updateUi(playerId);
-			}
-		});
+//		final ListBox playerSelect = new ListBox();
+//		playerSelect.addItem("WhitePlayer");
+//		playerSelect.addItem("BlackPlayer");
+//		playerSelect.addItem("Viewer");
+//		playerSelect.addChangeHandler(new ChangeHandler() {
+//			
+//			@Override
+//			public void onChange(ChangeEvent event) {
+//				int selectedIndex = playerSelect.getSelectedIndex();
+//				String playerId = selectedIndex == 2 ? GameApi.VIEWER_ID
+//			            : container.getPlayerIds().get(selectedIndex);
+//			        container.updateUi(playerId);
+//			}
+//		});
 	 
 		FlowPanel flowPanel = new FlowPanel();
 		flowPanel.add(pokerGraphics);
-		flowPanel.add(playerSelect);
+//		flowPanel.add(playerSelect);
 		RootPanel.get().setPixelSize(800, 800);
 		RootPanel.get("mainDiv").add(flowPanel);
 		container.sendGameReady();	
-		container.updateUi(container.getPlayerIds().get(0));
+//		container.updateUi(container.getPlayerIds().get(0));
 	}
 
 }
