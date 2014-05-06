@@ -19,7 +19,7 @@
 
 .imgShortContainer {
 	overflow: hidden;
-	width: 15px;
+	width: 10px;
 	height: 97px;
 }
 
@@ -41,6 +41,32 @@
 </style>
 </head>
 <body>
-    <div id="mainDiv" width="800" height="800" ></div>
+   <!--  <div id="mainDiv" width="320" height="400" ></div> -->
+    <div id="mainDiv" ></div>
+     <script>
+function scaleBody() {
+  var myGameWidth = 500;
+  var myGameHeight = 700;
+  var scaleX = window.innerWidth / myGameWidth;
+  var scaleY = window.innerHeight / myGameHeight;
+  var scale = Math.min(scaleX, scaleY);
+  var transformString = "scale(" + scale + "," + scale + ")";
+  document.body.style.transform = transformString;
+  document.body.style['-o-transform'] = transformString;
+  document.body.style['-webkit-transform'] = transformString;
+  document.body.style['-moz-transform'] = transformString;
+  document.body.style['-ms-transform'] = transformString;
+  var transformOriginString = "0 0 0";
+  document.body.style['transform-origin'] = transformOriginString;
+  document.body.style['-o-transform-origin'] = transformOriginString;
+  document.body.style['-webkit-transform-origin'] = transformOriginString;
+  document.body.style['-moz-transform-origin'] = transformOriginString;
+  document.body.style['-ms-transform-origin'] = transformOriginString;
+}
+window.onresize = scaleBody;
+window.onorientationchange = scaleBody;
+document.addEventListener("orientationchange", scaleBody);
+scaleBody();
+</script>
   </body>
 </html>
