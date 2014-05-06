@@ -4,7 +4,7 @@
 
 package edu.nyu.smg.ninetyNine.client;
 
-import java.util.Comparator;
+import java.util.*;
 
 public enum Rank {
 
@@ -54,5 +54,4 @@ public enum Rank {
 								.valueOf(rankString);
 		return VALUES[rankIndex - 1];
 	}
-
 }

@@ -28,7 +28,7 @@ public class PokerPresenter {
 	 * value card. HAS_WINNER: to suggest that we have a winner right now.
 	 */
 	public enum PokerMessage {
-		INVISIBLE, NEXT_MOVE_SUB, HAS_WINNER;
+		INVISIBLE, NEXT_MOVE_SUB, HAS_WINNER, AI_WIN;
 	}
 
 	public interface View {
@@ -73,6 +73,8 @@ public class PokerPresenter {
 		 * selectedCards.
 		 */
 		void chooseNextCard(List<Card> selectedCards, List<Card> remainingCards);
+		
+		void chooseNextSubCard(List<Card> selectedCards, List<Card> remainingCards);
 
 		/**
 		 * Asks the player to set the IS_SUB field in the game state. If
@@ -91,6 +93,8 @@ public class PokerPresenter {
 		 * or after the initial moves.
 		 */
 		void disableAllButton();
+		
+		void setAIWin();
 	}
 
 	/*
@@ -173,6 +177,10 @@ public class PokerPresenter {
 		selectedCards = Lists.newArrayList();
 
 		if (updateUI.isAiPlayer()) {
+			if(pokerState.isGameOver()){
+				pokerView.setAIWin();
+				return;
+			}
 			aiMove = new AIMove(pokerState);
 			container.sendMakeMove(gameLogic.getExpectedOperations(
 					aiMove.getBestMove(), pokerState, playerIds, null));
@@ -196,19 +204,24 @@ public class PokerPresenter {
 				unusedPile.size(), getMyCards(), pokerState.getPoints(),
 				isClockWise(), getPokerMessage());
 		if (isMyTurn()) {
-			List<Card> myCards = getMyCards();
-			List<Rank> myRanks = new ArrayList<Rank>();
-			boolean subFlag = false;
-			for(Card card : myCards){
-				Rank rank = card.getCardRank();
-				myRanks.add(rank);
-			}
-			if(myRanks.contains(Rank.TEN)||myRanks.contains(Rank.QUEEN)){
-				subFlag = true;
-			}
-			pokerView.presenterSetSub(subFlag);
+			
 			if (opponentCards.size() > 0 && !pokerState.isGameOver()) {
-				chooseNextCard();
+				List<Card> myCards = getMyCards();
+				List<Rank> myRanks = new ArrayList<Rank>();
+				boolean subFlag = false;
+				for(Card card : myCards){
+					Rank rank = card.getCardRank();
+					myRanks.add(rank);
+				}
+				if(myRanks.contains(Rank.TEN)||myRanks.contains(Rank.QUEEN)){
+					subFlag = true;
+				}
+				pokerView.presenterSetSub(subFlag);
+				if(pokerState.isSub()){
+					chooseNextSubCard();
+				}else{
+					chooseNextCard();
+				}				
 			}
 		}
 	}
@@ -248,6 +261,20 @@ public class PokerPresenter {
 		}
 		chooseNextCard();
 	}
+	
+	public void subCardSelected(Card card) {
+		check(isMyTurn() && !pokerState.isGameOver());
+		if (selectedCards.contains(card)) {
+			selectedCards.remove(card);
+		} else if (!selectedCards.contains(card) && selectedCards.size() == 0) {
+			selectedCards.add(card);
+		} else if (!selectedCards.contains(card) && selectedCards.size() == 1) {
+			selectedCards.clear();
+			selectedCards.add(card);
+		}
+		chooseNextSubCard();
+	}
+
 
 	/**
 	 * Finishes the card selection process. The view can only call this method
@@ -286,6 +313,11 @@ public class PokerPresenter {
 
 	private void chooseNextCard() {
 		pokerView.chooseNextCard(Lists.newArrayList(selectedCards),
+				gameLogic.subtract(getMyCards(), selectedCards));
+	}
+	
+	private void chooseNextSubCard(){
+		pokerView.chooseNextSubCard(Lists.newArrayList(selectedCards),
 				gameLogic.subtract(getMyCards(), selectedCards));
 	}
 

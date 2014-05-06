@@ -7,6 +7,7 @@ import edu.nyu.smg.ninetyNine.client.Card;
 import edu.nyu.smg.ninetyNine.client.PokerPresenter;
 import edu.nyu.smg.ninetyNine.client.PokerPresenter.PokerMessage;
 import edu.nyu.smg.ninetyNine.client.DirectionsOfTurn;
+import edu.nyu.smg.ninetyNine.client.Rank;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.DragHandler;
@@ -144,14 +145,6 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		return createImages(images, false);
 	}
 
-	private List<Image> createCardImages(List<Card> cards, boolean withClick) {
-		List<CardImage> images = Lists.newArrayList();
-		for (Card card : cards) {
-			images.add(CardImage.Factory.getCardImage(card));
-		}
-		return createImages(images, withClick);
-	}
-
 	/*
 	 * Use a Timer to simulate double click event. No animation on double click. Fading animation on
 	 * single click. Play the sound after the animation.
@@ -187,6 +180,39 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			}
 		}
 	}
+	
+	private List<Image> createCardImagesWithSub(List<Card> cards){
+		List<CardImage> images = Lists.newArrayList();
+		for(Card card : cards){
+			images.add(CardImage.Factory.getCardImage(card));
+		}
+		List<Image> result = Lists.newArrayList();
+		for(CardImage img : images){
+			final CardImage imgFinal = img;
+			final Image image = new Image(cardImageSupplier.getResource(img));
+			
+			if(imgFinal.card.getCardRank()==Rank.TEN || imgFinal.card.getCardRank()==Rank.QUEEN){
+					image.addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {						
+							pokerPresenter.subCardSelected(imgFinal.card);										
+					}
+				});
+			}
+			result.add(image);
+		}
+		return result;
+	}
+	
+	private List<Image> createCardImages(List<Card> cards, boolean withClick) {
+		List<CardImage> images = Lists.newArrayList();
+		for (Card card : cards) {
+			images.add(CardImage.Factory.getCardImage(card));
+		}
+		return createImages(images, withClick);
+	}
+
 	
 	private List<Image> createImages(List<CardImage> images, boolean withClick) {
 		List<Image> result = Lists.newArrayList();
@@ -261,6 +287,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			break;
 		case HAS_WINNER:
 			message += gameConstants.hasWinner();
+		case AI_WIN:
+			message += "Oops! The dummy AI beats you...";
 		case INVISIBLE:
 			break;
 		default:
@@ -271,6 +299,11 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		}
 		Label label = new Label(message);
 		mesg.add(label);
+	}
+	
+	@Override
+	public void setAIWin(){
+		alertPokerMessage(PokerMessage.HAS_WINNER);
 	}
 
 	@UiHandler("submitButton")
@@ -330,6 +363,16 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		enableClicks = true;
 		placeImages(playerArea, createCardImages(remainingCards, true));
 		placeImages(selectedArea, createCardImages(selectedCards, true));
+		submitButton.setEnabled(!selectedCards.isEmpty());
+	}
+	
+	@Override
+	public void chooseNextSubCard(List<Card> selectedCards, List<Card> remainingCards){
+		Collections.sort(selectedCards);
+		Collections.sort(remainingCards);
+		enableClicks = true;
+		placeImages(selectedArea, createCardImagesWithSub(selectedCards));
+		placeImages(playerArea, createCardImagesWithSub(remainingCards));
 		submitButton.setEnabled(!selectedCards.isEmpty());
 	}
 
