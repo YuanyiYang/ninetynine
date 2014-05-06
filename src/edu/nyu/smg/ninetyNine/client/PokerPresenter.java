@@ -2,6 +2,7 @@ package edu.nyu.smg.ninetyNine.client;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Optional;
@@ -195,7 +196,17 @@ public class PokerPresenter {
 				unusedPile.size(), getMyCards(), pokerState.getPoints(),
 				isClockWise(), getPokerMessage());
 		if (isMyTurn()) {
-			pokerView.presenterSetSub(true);
+			List<Card> myCards = getMyCards();
+			List<Rank> myRanks = new ArrayList<Rank>();
+			boolean subFlag = false;
+			for(Card card : myCards){
+				Rank rank = card.getCardRank();
+				myRanks.add(rank);
+			}
+			if(myRanks.contains(Rank.TEN)||myRanks.contains(Rank.QUEEN)){
+				subFlag = true;
+			}
+			pokerView.presenterSetSub(subFlag);
 			if (opponentCards.size() > 0 && !pokerState.isGameOver()) {
 				chooseNextCard();
 			}

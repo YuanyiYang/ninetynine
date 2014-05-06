@@ -2,6 +2,7 @@ package edu.nyu.smg.ninetyNine.client;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.*;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
@@ -110,4 +111,5 @@ public class PokerState {
 	public ImmutableList<Integer> getWhiteOrBlack(ColorOfPlayer color) {
 		return color.isWhite() ? white : black;
 	}
+	
 }

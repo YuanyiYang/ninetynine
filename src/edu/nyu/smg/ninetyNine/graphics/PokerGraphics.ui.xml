@@ -15,7 +15,7 @@
 		<g:HorizontalPanel>
 			<g:HorizontalPanel height="50px" width="50px" ui:field="points"></g:HorizontalPanel>
 			<g:HorizontalPanel height="50px" width="50px" ui:field="direction"></g:HorizontalPanel>
-			<g:HorizontalPanel height="50px" width="50px" ui:field="mesg"></g:HorizontalPanel>
+			<g:HorizontalPanel height="50px" width="200px" ui:field="mesg"></g:HorizontalPanel>
 		</g:HorizontalPanel>
 	<!-- 	<g:AbsolutePanel ui:field="dndArea">
 		  
