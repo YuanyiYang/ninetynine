@@ -287,8 +287,10 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			break;
 		case HAS_WINNER:
 			message += gameConstants.hasWinner();
+			break;
 		case AI_WIN:
 			message += "Oops! The dummy AI beats you...";
+			break;
 		case INVISIBLE:
 			break;
 		default:
