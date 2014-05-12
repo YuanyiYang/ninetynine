@@ -48,7 +48,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			.create(PokerGraphicsUiBinder.class);
 
 	interface PokerGraphicsUiBinder extends UiBinder<Widget, PokerGraphics> {
-	}
+	} 
+	
 	
 	@UiField
 	HorizontalPanel opponentArea;
