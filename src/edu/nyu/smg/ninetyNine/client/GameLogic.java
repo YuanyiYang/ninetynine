@@ -17,17 +17,9 @@ import org.game_api.GameApi.*;
 public class GameLogic {
 
 	/*
-	 * How to handle the Is_Sub situation? Here is my approach. First use a Set
-	 * operation to set the is_sub field in the state to be true. It represents
-	 * the next move is subtract ten or twenty. After the subtraction, use a
-	 * Delete operation to set the is_sub date field to be false(default).
-	 */
-
-	/*
 	 * The entries used in the poker game are: turn:W/B, W, B, Used, Unused,
 	 * points, C0...C51, direction:clockwise, isSub:false, isGameOver:false
 	 */
-	
 
 	private static final String W = "W"; // White hand
 	private static final String B = "B"; // Black hand
@@ -112,7 +104,7 @@ public class GameLogic {
 		Card card = currentState.getCards().get(diffUsedPile.get(0)).get();
 		/*
 		 * It seems there is no need to find out whether last move contains the
-		 * Delete operation or not. The Delete 
+		 * Delete operation or not. The Delete
 		 */
 		return getExpectedOperations(diffUsedPile, lastState, playerIds, card);
 	}
@@ -572,8 +564,9 @@ public class GameLogic {
 					.of(blackPlayerId)));
 		}
 		for (int i = 10; i < 52; i++) {
-			operations.add(new SetVisibility(C + i, ImmutableList
-					.<String> of())); // to question
+			operations
+					.add(new SetVisibility(C + i, ImmutableList.<String> of())); // to
+																					// question
 		}
 		operations.add(new Set(P, 0));
 		operations.add(new Set(DIRECTION, CLOCKWISE));

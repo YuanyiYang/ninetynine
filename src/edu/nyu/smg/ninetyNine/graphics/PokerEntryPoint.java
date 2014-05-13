@@ -20,6 +20,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import com.googlecode.mgwt.ui.client.MGWT;
+import com.googlecode.mgwt.ui.client.MGWTSettings;
+
 import edu.nyu.smg.ninetyNine.client.GameLogic;
 import edu.nyu.smg.ninetyNine.client.PokerPresenter;
 
@@ -70,6 +73,7 @@ public class PokerEntryPoint implements EntryPoint {
 	}
 
 	private void onModuleLoad2() {
+		MGWT.applySettings(MGWTSettings.getAppSetting());
 		Window.enableScrolling(false);
 		Game game = new Game() {
 			@Override
@@ -112,5 +116,5 @@ public class PokerEntryPoint implements EntryPoint {
 		container.sendGameReady();
 		// container.updateUi(container.getPlayerIds().get(0));
 	}
-
+		
 }

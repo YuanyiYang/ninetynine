@@ -12,7 +12,9 @@
  
   <inherits name="com.google.gwt.i18n.I18N"/>
   <extend-property name="locale" values="en"/>
+  <extend-property name="locale" values="zh"/>  
   <set-property-fallback name="locale" value="en"/> 
+  
   
   <!-- Specify the paths for translatable code                    -->
   <inherits name='edu.nyu.smg.ninetyNine.clientNinetyNine'/>

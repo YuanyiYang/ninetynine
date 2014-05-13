@@ -28,7 +28,7 @@ public class PokerPresenter {
 	 * value card. HAS_WINNER: to suggest that we have a winner right now.
 	 */
 	public enum PokerMessage {
-		INVISIBLE, NEXT_MOVE_SUB, HAS_WINNER, AI_WIN;
+		INVISIBLE, NEXT_MOVE_SUB, HAS_WINNER;
 	}
 
 	public interface View {
@@ -74,6 +74,11 @@ public class PokerPresenter {
 		 */
 		void chooseNextCard(List<Card> selectedCards, List<Card> remainingCards);
 		
+		/**
+		 * This method is like {@link chooseNextCard} with the difference that this method is used 
+		 * to update the view when the player wants to choose a card with minus 0 points.
+		 * 
+		 */
 		void chooseNextSubCard(List<Card> selectedCards, List<Card> remainingCards);
 
 		/**
@@ -94,7 +99,11 @@ public class PokerPresenter {
 		 */
 		void disableAllButton();
 		
-		void setAIWin();
+		/**
+		 * This method will be called when updated the view when we have a winner when plays against AI
+		 */
+		void showWinner();
+		
 	}
 
 	/*
@@ -178,12 +187,13 @@ public class PokerPresenter {
 
 		if (updateUI.isAiPlayer()) {
 			if(pokerState.isGameOver()){
-				pokerView.setAIWin();
-				return;
+				pokerView.showWinner();
+			}else{
+				aiMove = new AIMove(pokerState);
+				container.sendMakeMove(gameLogic.getExpectedOperations(
+						aiMove.getBestMove(), pokerState, playerIds, null));
 			}
-			aiMove = new AIMove(pokerState);
-			container.sendMakeMove(gameLogic.getExpectedOperations(
-					aiMove.getBestMove(), pokerState, playerIds, null));
+			return;
 		}
 		if (updateUI.isViewer()) {
 			pokerView.setViewerState(pokerState.getWhite().size(), pokerState
@@ -203,8 +213,7 @@ public class PokerPresenter {
 				getUsedCards(),// usedPile.size(),
 				unusedPile.size(), getMyCards(), pokerState.getPoints(),
 				isClockWise(), getPokerMessage());
-		if (isMyTurn()) {
-			
+		if (isMyTurn()) {	
 			if (opponentCards.size() > 0 && !pokerState.isGameOver()) {
 				List<Card> myCards = getMyCards();
 				List<Rank> myRanks = new ArrayList<Rank>();

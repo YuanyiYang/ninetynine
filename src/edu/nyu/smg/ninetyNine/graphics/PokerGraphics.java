@@ -24,6 +24,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.media.client.Audio;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -43,14 +45,13 @@ import com.google.gwt.user.client.ui.Widget;
 public class PokerGraphics extends Composite implements PokerPresenter.View {
 
 	private static GameSounds gameSounds = GWT.create(GameSounds.class);
-	
+
 	private static PokerGraphicsUiBinder uiBinder = GWT
 			.create(PokerGraphicsUiBinder.class);
 
 	interface PokerGraphicsUiBinder extends UiBinder<Widget, PokerGraphics> {
-	} 
-	
-	
+	}
+
 	@UiField
 	HorizontalPanel opponentArea;
 	@UiField
@@ -71,71 +72,75 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	Button subtractButton;
 	@UiField
 	HorizontalPanel mesg;
-//	@UiField
-//	AbsolutePanel dndArea;
-//	@UiField
-//	Label dragMe;
-//	@UiField
-//	Label dragOntoMe;
+	// @UiField
+	// AbsolutePanel dndArea;
+	// @UiField
+	// Label dragMe;
+	// @UiField
+	// Label dragOntoMe;
 
-	
 	private boolean enableClicks = false;
 	private final CardImageSupplier cardImageSupplier;
 	private PokerPresenter pokerPresenter;
 	private CardFadeAnimation fadeAnimation;
 	private Timer myTimer;
 	private Audio cardSelected;
-	private Audio cardDown; // haven't used it in any where
-//	private PickupDragController dragController;
-//	private SimpleDropController dropController;
+	private Audio cardDown;
+	// private PickupDragController dragController;
+	// private SimpleDropController dropController;
 	private GameConstants gameConstants;
-	
 
 	public PokerGraphics() {
-		gameConstants = (GameConstants)GWT.create(GameConstants.class);
+		gameConstants = (GameConstants) GWT.create(GameConstants.class);
 		CardImages cardImages = GWT.create(CardImages.class);
 		this.cardImageSupplier = new CardImageSupplier(cardImages);
 		initWidget(uiBinder.createAndBindUi(this));
-		if(Audio.isSupported()){
+		if (Audio.isSupported()) {
 			cardSelected = Audio.createIfSupported();
-			cardSelected.addSource(gameSounds.cardCapturedMp3().getSafeUri().asString(), AudioElement.TYPE_MP3);
-			cardSelected.addSource(gameSounds.cardCapturedWav().getSafeUri().asString(), AudioElement.TYPE_WAV);
+			cardSelected.addSource(gameSounds.cardCapturedMp3().getSafeUri()
+					.asString(), AudioElement.TYPE_MP3);
+			cardSelected.addSource(gameSounds.cardCapturedWav().getSafeUri()
+					.asString(), AudioElement.TYPE_WAV);
 			cardDown = Audio.createIfSupported();
-			cardDown.addSource(gameSounds.cardDownMp3().getSafeUri().asString(), AudioElement.TYPE_MP3);
-			cardDown.addSource(gameSounds.cardDownWav().getSafeUri().asString(), AudioElement.TYPE_WAV);
+			cardDown.addSource(
+					gameSounds.cardDownMp3().getSafeUri().asString(),
+					AudioElement.TYPE_MP3);
+			cardDown.addSource(
+					gameSounds.cardDownWav().getSafeUri().asString(),
+					AudioElement.TYPE_WAV);
 		}
 		submitButton.setText(gameConstants.submitButton());
 		subtractButton.setText(gameConstants.subMoveButton());
-//		dndArea.setPixelSize(300, 300);
-//		dndArea.setStyleName("dnd-started-blue");
-//		dragOntoMe.setStyleName("dnd-default");
-//		dragController = new PickupDragController(dndArea, true);
-//		dragController.setBehaviorConstrainedToBoundaryPanel(true);
-//		dragController.setBehaviorMultipleSelection(true);
-//		dropController = new SimpleDropController(dragOntoMe){
-//			@Override
-//			public void onDrop(DragContext context){
-//				super.onDrop(context);
-//				dragOntoMe.setStyleName("dnd-after-drop");
-//				dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
-//			}
-//			
-//			@Override
-//			public void onEnter(DragContext context){
-//				super.onEnter(context);
-//				dragOntoMe.setStyleName("dnd-enter");
-//				dragOntoMe.getElement().getStyle().setFontSize(5, Unit.EM);
-//			}
-//			
-//			@Override
-//			public void onLeave(DragContext context){
-//				super.onEnter(context);
-//				dragOntoMe.setStyleName("dnd-default");	
-//				dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
-//			}
-//		};
-//		dragController.registerDropController(dropController);
-//		dragController.makeDraggable(dragMe);
+		// dndArea.setPixelSize(300, 300);
+		// dndArea.setStyleName("dnd-started-blue");
+		// dragOntoMe.setStyleName("dnd-default");
+		// dragController = new PickupDragController(dndArea, true);
+		// dragController.setBehaviorConstrainedToBoundaryPanel(true);
+		// dragController.setBehaviorMultipleSelection(true);
+		// dropController = new SimpleDropController(dragOntoMe){
+		// @Override
+		// public void onDrop(DragContext context){
+		// super.onDrop(context);
+		// dragOntoMe.setStyleName("dnd-after-drop");
+		// dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
+		// }
+		//
+		// @Override
+		// public void onEnter(DragContext context){
+		// super.onEnter(context);
+		// dragOntoMe.setStyleName("dnd-enter");
+		// dragOntoMe.getElement().getStyle().setFontSize(5, Unit.EM);
+		// }
+		//
+		// @Override
+		// public void onLeave(DragContext context){
+		// super.onEnter(context);
+		// dragOntoMe.setStyleName("dnd-default");
+		// dragOntoMe.getElement().getStyle().setFontSize(2, Unit.EM);
+		// }
+		// };
+		// dragController.registerDropController(dropController);
+		// dragController.makeDraggable(dragMe);
 	}
 
 	private List<Image> createBackCards(int numOfCards) {
@@ -147,8 +152,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	}
 
 	/*
-	 * Use a Timer to simulate double click event. No animation on double click. Fading animation on
-	 * single click. Play the sound after the animation.
+	 * Use a Timer to simulate double click event. No animation on double click.
+	 * Fading animation on single click. Play the sound after the animation.
 	 */
 	private class myClickHandler implements ClickHandler {
 		private Image image;
@@ -166,7 +171,8 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 					myTimer = new Timer() {
 						@Override
 						public void run() {
-							fadeAnimation = new CardFadeAnimation(image,cardSelected);
+							fadeAnimation = new CardFadeAnimation(image,
+									cardSelected);
 							fadeAnimation.fade(500, 1.0);
 							myTimer.cancel();
 							myTimer = null;
@@ -181,23 +187,33 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			}
 		}
 	}
-	
-	private List<Image> createCardImagesWithSub(List<Card> cards){
+
+	private List<Image> createCardImagesWithSub(List<Card> cards) {
 		List<CardImage> images = Lists.newArrayList();
-		for(Card card : cards){
+		for (Card card : cards) {
 			images.add(CardImage.Factory.getCardImage(card));
 		}
 		List<Image> result = Lists.newArrayList();
-		for(CardImage img : images){
+		for (CardImage img : images) {
 			final CardImage imgFinal = img;
 			final Image image = new Image(cardImageSupplier.getResource(img));
-			
-			if(imgFinal.card.getCardRank()==Rank.TEN || imgFinal.card.getCardRank()==Rank.QUEEN){
-					image.addClickHandler(new ClickHandler() {
-					
+
+			if (imgFinal.card.getCardRank() == Rank.TEN
+					|| imgFinal.card.getCardRank() == Rank.QUEEN) {
+				// image.addTouchStartHandler(new TouchStartHandler() {
+				//
+				// @Override
+				// public void onTouchStart(TouchStartEvent event) {
+				// if (enableClicks) {
+				// pokerPresenter.subCardSelected(imgFinal.card);
+				// }
+				// }
+				// });
+				image.addClickHandler(new ClickHandler() {
+
 					@Override
-					public void onClick(ClickEvent event) {						
-							pokerPresenter.subCardSelected(imgFinal.card);										
+					public void onClick(ClickEvent event) {
+						pokerPresenter.subCardSelected(imgFinal.card);
 					}
 				});
 			}
@@ -205,7 +221,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		}
 		return result;
 	}
-	
+
 	private List<Image> createCardImages(List<Card> cards, boolean withClick) {
 		List<CardImage> images = Lists.newArrayList();
 		for (Card card : cards) {
@@ -214,26 +230,33 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		return createImages(images, withClick);
 	}
 
-	
 	private List<Image> createImages(List<CardImage> images, boolean withClick) {
 		List<Image> result = Lists.newArrayList();
 		for (CardImage img : images) {
 			final CardImage imgFinal = img;
 			final Image image = new Image(cardImageSupplier.getResource(img));
 			if (withClick) {
-				
-//				image.addClickHandler(new myClickHandler(image, imgFinal)
-//				
-//				);
+
+				// image.addClickHandler(new myClickHandler(image, imgFinal)
+				//
+				// );
 				image.addClickHandler(new ClickHandler() {
-					
 					@Override
 					public void onClick(ClickEvent event) {
-						if(enableClicks){
+						if (enableClicks) {
 							pokerPresenter.cardSelected(imgFinal.card);
-						}				
+						}
 					}
 				});
+				// image.addTouchStartHandler(new TouchStartHandler() {
+				//
+				// @Override
+				// public void onTouchStart(TouchStartEvent event) {
+				// if (enableClicks) {
+				// pokerPresenter.cardSelected(imgFinal.card);
+				// }
+				// }
+				// });
 			}
 			result.add(image);
 		}
@@ -255,9 +278,9 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	private String directionString(boolean isClockwise) {
 		if (isClockwise) {
 			return gameConstants.clockwise();
-			//return DirectionsOfTurn.Clockwise.toString();
+			// return DirectionsOfTurn.Clockwise.toString();
 		} else {
-			//return DirectionsOfTurn.AntiClockwise.toString();
+			// return DirectionsOfTurn.AntiClockwise.toString();
 			return gameConstants.antiClockwise();
 		}
 	}
@@ -279,6 +302,11 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		presenterSetSub(false);
 	}
 
+	@Override
+	public void showWinner() {
+		alertPokerMessage(PokerMessage.HAS_WINNER);
+	}
+
 	private void alertPokerMessage(PokerMessage pokerMessage) {
 		mesg.clear();
 		String message = "";
@@ -288,9 +316,6 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			break;
 		case HAS_WINNER:
 			message += gameConstants.hasWinner();
-			break;
-		case AI_WIN:
-			message += "Oops! The dummy AI beats you...";
 			break;
 		case INVISIBLE:
 			break;
@@ -302,11 +327,6 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		}
 		Label label = new Label(message);
 		mesg.add(label);
-	}
-	
-	@Override
-	public void setAIWin(){
-		alertPokerMessage(PokerMessage.HAS_WINNER);
 	}
 
 	@UiHandler("submitButton")
@@ -368,9 +388,10 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		placeImages(selectedArea, createCardImages(selectedCards, true));
 		submitButton.setEnabled(!selectedCards.isEmpty());
 	}
-	
+
 	@Override
-	public void chooseNextSubCard(List<Card> selectedCards, List<Card> remainingCards){
+	public void chooseNextSubCard(List<Card> selectedCards,
+			List<Card> remainingCards) {
 		Collections.sort(selectedCards);
 		Collections.sort(remainingCards);
 		enableClicks = true;
