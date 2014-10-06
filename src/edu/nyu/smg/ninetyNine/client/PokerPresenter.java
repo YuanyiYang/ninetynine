@@ -145,11 +145,11 @@ public class PokerPresenter {
 		 * However, the ENUM is not a subclass of object.
 		 */
 		if (updateUI.getState().isEmpty()) {
-			// The W player sends the initial setup move.
+			// The W player sends the initial setup move.			
+			pokerView.disableAllButton();
 			if (myColor.isPresent() && myColor.get().isWhite()) {
 				sendInitialMove(playerIds);
 			}
-			pokerView.disableAllButton();
 			return;
 		}
 		/*

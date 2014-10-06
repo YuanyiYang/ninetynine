@@ -162,11 +162,14 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 		public myClickHandler(Image image, CardImage imgFinal) {
 			this.image = image;
 			this.imgFinal = imgFinal;
+			System.out.println("enableClick1 " + enableClicks);
+			
 		}
 
 		@Override
 		public void onClick(ClickEvent event) {
 			if (enableClicks) {
+				System.out.println("enableClick2" + enableClicks);
 				if (myTimer == null) {
 					myTimer = new Timer() {
 						@Override
@@ -237,12 +240,14 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 			final Image image = new Image(cardImageSupplier.getResource(img));
 			if (withClick) {
 
-				// image.addClickHandler(new myClickHandler(image, imgFinal)
-				//
-				// );
+//				System.out.println("Add clickHandler");
+//				 image.addClickHandler(new myClickHandler(image, imgFinal)
+//				
+//				 );
 				image.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
+						
 						if (enableClicks) {
 							pokerPresenter.cardSelected(imgFinal.card);
 						}
@@ -297,6 +302,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 	}
 
 	public void disableAllButton() {
+		//System.out.println("dis");
 		submitButton.setEnabled(false);
 		enableClicks = false;
 		presenterSetSub(false);
@@ -407,6 +413,7 @@ public class PokerGraphics extends Composite implements PokerPresenter.View {
 
 	@Override
 	public void presenterSetSub(boolean fromPersenterSub) {
+		System.out.println("subsub");
 		subtractButton.setEnabled(fromPersenterSub);
 	}
 }

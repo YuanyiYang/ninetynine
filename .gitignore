@@ -2,6 +2,11 @@
 *.class
 .project
 .DS_Store
+/.settings
+/gwt-unitCache
+*.js
+/war
+/.gwt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
